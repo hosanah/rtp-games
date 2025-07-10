@@ -2,7 +2,6 @@ import './loadEnv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import sequelize from './models';
 
 // Importar rotas
@@ -28,14 +27,6 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
 }));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // máximo 100 requests por IP por janela de tempo
-  message: 'Muitas tentativas, tente novamente em 15 minutos.'
-});
-app.use(limiter);
 
 // Middleware para parsing JSON
 app.use(express.json({ limit: '10mb' }));
@@ -65,6 +56,11 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Middleware para rotas não encontradas
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Rota não encontrada' });
+});
+
+// Página base
+app.get('/', (req, res) => {
+  res.send('RTP Games Dashboard API está no ar');
 });
 
 // Iniciar servidor
