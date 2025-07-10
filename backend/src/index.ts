@@ -1,8 +1,8 @@
+import './loadEnv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 
 // Importar rotas
@@ -10,8 +10,6 @@ import authRoutes from './routes/auth';
 import gameRoutes from './routes/games';
 import rtpRoutes from './routes/rtp';
 
-// Carregar variáveis de ambiente
-dotenv.config();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3001');

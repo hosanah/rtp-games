@@ -12,7 +12,11 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: postgres://postgres:2412055aa@easypanel.zapchatbr.com:5432/vigilancia?sslmode=disable
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: zapchat_tur
+      DB_USER: postgres
+      DB_PASSWORD: password
       JWT_SECRET: rtp-games-dashboard-super-secret-jwt-key-2024
       JWT_EXPIRES_IN: 7d
       BCRYPT_ROUNDS: 12
@@ -25,8 +29,9 @@ services:
       - ./backend/prisma:/app/prisma
     command: >
       sh -c "
-        npx prisma migrate deploy &&
-        npx prisma db seed &&
+        export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable && \
+        npx prisma migrate deploy && \
+        npx prisma db seed && \
         npm start
       "
 
