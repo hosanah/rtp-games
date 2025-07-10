@@ -15,6 +15,9 @@ RUN npm install
 # Copiar restante do código
 COPY backend ./
 
+# Build da aplicação TypeScript
+RUN npm run build
+
 # Estágio de produção
 FROM node:20-alpine
 
@@ -26,7 +29,7 @@ WORKDIR /app
 # Copiar dependências e app do builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/src ./src
+COPY --from=builder /app/dist ./dist
 
 # Variáveis de ambiente padrão (podem ser sobrescritas pelo EasyPanel)
 ENV PORT=3001 \
