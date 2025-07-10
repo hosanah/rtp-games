@@ -11,7 +11,7 @@ if ! docker info > /dev/null 2>&1; then
 fi
 
 # Iniciar banco de dados de desenvolvimento
-echo "📊 Iniciando banco de dados MySQL..."
+echo "📊 Iniciando banco de dados PostgreSQL..."
 docker-compose -f docker-compose.dev.yml up -d
 
 # Aguardar banco estar pronto
@@ -19,13 +19,13 @@ echo "⏳ Aguardando banco de dados ficar pronto..."
 sleep 10
 
 # Verificar se o banco está rodando
-if ! docker-compose -f docker-compose.dev.yml ps mysql-dev | grep -q "Up"; then
+if ! docker-compose -f docker-compose.dev.yml ps postgres-dev | grep -q "Up"; then
     echo "❌ Erro ao iniciar banco de dados"
     exit 1
 fi
 
 echo "✅ Banco de dados iniciado com sucesso!"
-echo "🌐 phpMyAdmin disponível em: http://localhost:8080"
+echo "🌐 pgAdmin disponível em: http://localhost:8080"
 echo ""
 echo "Para iniciar o backend:"
 echo "  cd backend && npm run dev"

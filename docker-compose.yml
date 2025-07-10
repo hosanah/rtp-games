@@ -1,27 +1,6 @@
 version: '3.8'
 
 services:
-  # Banco de dados MySQL
-  mysql:
-    image: mysql:8.0
-    container_name: rtp-games-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: rtp_games_dashboard
-      MYSQL_USER: rtp_user
-      MYSQL_PASSWORD: rtp_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./backend/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    networks:
-      - rtp-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
 
   # Backend API
   backend:
@@ -33,16 +12,13 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: mysql://rtp_user:rtp_password@mysql:3306/rtp_games_dashboard
+      DATABASE_URL: postgres://postgres:2412055aa@easypanel.zapchatbr.com:5432/vigilancia?sslmode=disable
       JWT_SECRET: rtp-games-dashboard-super-secret-jwt-key-2024
       JWT_EXPIRES_IN: 7d
       BCRYPT_ROUNDS: 12
       FRONTEND_URL: http://localhost:3000
     ports:
       - "3001:3001"
-    depends_on:
-      mysql:
-        condition: service_healthy
     networks:
       - rtp-network
     volumes:
@@ -70,10 +46,6 @@ services:
       - backend
     networks:
       - rtp-network
-
-volumes:
-  mysql_data:
-    driver: local
 
 networks:
   rtp-network:
