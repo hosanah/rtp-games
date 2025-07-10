@@ -1,36 +1,47 @@
-# Build stage
+# Estágio de build
 FROM node:20-alpine AS builder
+
+# Instalar dependências do sistema para build
+RUN apk add --no-cache openssl openssl-dev lz4-libs lz4-dev musl-dev
+
 WORKDIR /app
 
-# Install backend dependencies
+# Copiar arquivos de dependências
 COPY backend/package*.json ./
-RUN npm ci
 
-# Copy source and build
+# Instalar dependências
+RUN npm install
+
+# Copiar restante do código
 COPY backend ./
-RUN npx prisma generate && npm run build
 
-# Remove development dependencies
-RUN npm prune --omit=dev
+# Estágio de produção
+FROM node:20-alpine
 
-# Production image
-FROM node:20-alpine AS runner
+# Instalar dependências mínimas para produção
+RUN apk add --no-cache openssl lz4-libs
+
 WORKDIR /app
-ENV NODE_ENV=production
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
-
-# Copy necessary files from builder stage
-COPY --from=builder /app/dist ./dist
+# Copiar dependências e app do builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/.env ./
 
-USER nodejs
+# Criar diretório para banco SQLite
+RUN mkdir -p ./database && \
+    chown -R node:node /app && \
+    chmod -R 755 /app
+
+# Variáveis de ambiente padrão (podem ser sobrescritas pelo EasyPanel)
+ENV PORT=3001 \
+    NODE_ENV="production"
+
+# Executar como usuário seguro
+USER node
+
 EXPOSE 3001
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3001/api/health || exit 1
-
-CMD ["node", "dist/index.js"]
+# Iniciar aplicação
+CMD ["npm", "start"]
