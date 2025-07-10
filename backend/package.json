@@ -7,19 +7,13 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "ts-node prisma/seed.ts",
-    "prisma:studio": "prisma studio"
+    "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed:all"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
-  "keywords": ["express", "prisma", "jwt", "postgres"],
+  "keywords": ["express", "sequelize", "jwt", "postgres"],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -27,7 +21,9 @@
     "express-rate-limit": "^7.4.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^5.22.0"
+    "sequelize": "^6.37.1",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -36,6 +32,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.10.2",
     "nodemon": "^3.1.7",
+    "sequelize-cli": "^6.6.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
