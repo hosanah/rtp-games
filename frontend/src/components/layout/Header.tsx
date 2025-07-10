@@ -1,7 +1,5 @@
-'use client'
-
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import Button from '@/components/ui/Button'
 import { GamepadIcon, UserIcon, LogOutIcon, BarChart3Icon } from 'lucide-react'
