@@ -148,7 +148,6 @@ rtp-games-dashboard/
 │   │   ├── types/           # Tipos TypeScript
 │   │   └── utils/           # Utilitários
 │   ├── prisma/              # Schema e migrations
-│   ├── Dockerfile
 │   └── package.json
 ├── frontend/                # App Next.js 14
 │   ├── src/
@@ -157,8 +156,9 @@ rtp-games-dashboard/
 │   │   ├── hooks/           # Hooks customizados
 │   │   ├── lib/             # Utilitários e configurações
 │   │   └── types/           # Tipos TypeScript
-│   ├── Dockerfile
 │   └── package.json
+├── Dockerfile               # Build da aplicação frontend
+├── Dockerfileapi            # Build da API backend
 ├── scripts/                 # Scripts de automação
 ├── docker-compose.yml       # Produção
 ├── docker-compose.dev.yml   # Desenvolvimento
