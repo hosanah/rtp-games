@@ -1,8 +1,5 @@
-'use client'
-
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -20,7 +17,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { login } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -38,7 +35,7 @@ export default function LoginPage() {
       setLoading(true)
       setError('')
       await login(data.email, data.password)
-      router.push('/dashboard')
+      navigate('/dashboard')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido')
     } finally {

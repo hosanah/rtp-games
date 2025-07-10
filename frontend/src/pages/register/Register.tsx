@@ -1,8 +1,5 @@
-'use client'
-
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -25,7 +22,7 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { register: registerUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -43,7 +40,7 @@ export default function RegisterPage() {
       setLoading(true)
       setError('')
       await registerUser(data.name, data.email, data.password)
-      router.push('/dashboard')
+      navigate('/dashboard')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido')
     } finally {
