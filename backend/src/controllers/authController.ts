@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { User } from '../models/user';
 import { RegisterRequest, LoginRequest, AuthResponse, AuthenticatedRequest } from '../types/auth';
 import { 
   hashPassword, 
@@ -9,7 +9,6 @@ import {
   isValidPassword 
 } from '../utils/auth';
 
-const prisma = new PrismaClient();
 
 /**
  * Registrar novo usuário
@@ -45,9 +44,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Verificar se usuário já existe
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
-    });
+    const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
       res.status(409).json({ 
@@ -59,12 +56,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     // Criar usuário
     const hashedPassword = await hashPassword(password);
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword
-      }
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword
     });
 
     // Gerar token
@@ -118,9 +113,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Buscar usuário
-    const user = await prisma.user.findUnique({
-      where: { email }
-    });
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
       res.status(401).json({ 
@@ -179,15 +172,8 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
       return;
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true
-      }
+    const user = await User.findByPk(req.user.userId, {
+      attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt']
     });
 
     if (!user) {

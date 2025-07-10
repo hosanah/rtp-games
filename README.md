@@ -1,6 +1,6 @@
 # RTP Games Dashboard
 
-Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com Next.js 14, Node.js, Express.js, PostgreSQL e Prisma ORM.
+Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com Next.js 14, Node.js, Express.js, PostgreSQL e Sequelize ORM.
 
 ## 🚀 Tecnologias
 
@@ -16,7 +16,7 @@ Uma aplicação completa para monitoramento e análise de RTP (Return to Player)
 ### Backend
 - **Node.js** com **Express.js**
 - **TypeScript**
-- **Prisma ORM**
+- **Sequelize ORM**
 - **PostgreSQL**
 - **JWT** para autenticação
 - **bcrypt** para hash de senhas
@@ -90,8 +90,8 @@ cd backend
 npm install
 cp .env.example .env
 # Configure as variáveis no .env
-npx prisma migrate dev
-npx prisma db seed
+npm run migrate
+npm run seed
 npm run dev
 
 # Frontend
@@ -147,7 +147,7 @@ rtp-games-dashboard/
 │   │   ├── routes/          # Rotas da API
 │   │   ├── types/           # Tipos TypeScript
 │   │   └── utils/           # Utilitários
-│   ├── prisma/              # Schema e migrations
+│   ├── models/              # Sequelize models
 │   └── package.json
 ├── frontend/                # App Next.js 14
 │   ├── src/
@@ -172,9 +172,8 @@ rtp-games-dashboard/
 npm run dev          # Desenvolvimento
 npm run build        # Build para produção
 npm start            # Iniciar produção
-npm run prisma:migrate  # Executar migrations
-npm run prisma:seed     # Popular banco com dados
-npm run prisma:studio   # Interface visual do Prisma
+npm run migrate         # Executar migrations
+npm run seed            # Popular banco com dados
 ```
 
 ### Frontend

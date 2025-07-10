@@ -99,7 +99,7 @@ docker-compose up --build
 # Backend
 npm run dev          # Desenvolvimento
 npm run build        # Build
-npm run prisma:studio # Interface do banco
+npm run migrate       # Executar migrations
 
 # Frontend
 yarn dev             # Desenvolvimento

@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Op, fn, col } from 'sequelize';
 import { AuthenticatedRequest } from '../types/auth';
-
-const prisma = new PrismaClient();
+import { Game } from '../models/game';
+import { RtpHistory } from '../models/rtpHistory';
+import { User } from '../models/user';
 
 /**
  * Listar todos os jogos
@@ -37,31 +38,26 @@ export const getAllGames = async (req: Request, res: Response): Promise<void> =>
     }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search as string, mode: 'insensitive' } },
-        { provider: { contains: search as string, mode: 'insensitive' } },
-        { description: { contains: search as string, mode: 'insensitive' } }
+      where[Op.or] = [
+        { name: { [Op.iLike]: `%${search}%` } },
+        { provider: { [Op.iLike]: `%${search}%` } },
+        { description: { [Op.iLike]: `%${search}%` } }
       ];
     }
 
-    // Construir ordenação
-    const orderBy: any = {};
-    orderBy[sortBy as string] = sortOrder;
+    const order = [[sortBy as string, sortOrder as string]];
 
-    const [games, total] = await Promise.all([
-      prisma.game.findMany({
-        where,
-        orderBy,
-        skip,
-        take: limitNum,
-        include: {
-          _count: {
-            select: { rtpHistory: true }
-          }
-        }
-      }),
-      prisma.game.count({ where })
-    ]);
+    const { rows: games, count: total } = await Game.findAndCountAll({
+      where,
+      order,
+      offset: skip,
+      limit: limitNum,
+      attributes: {
+        include: [[fn('COUNT', col('rtpHistories.id')), 'rtpHistoryCount']]
+      },
+      include: [{ model: RtpHistory, attributes: [] }],
+      group: ['Game.id']
+    });
 
     res.json({
       games,
@@ -97,22 +93,13 @@ export const getGameById = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const game = await prisma.game.findUnique({
-      where: { id: gameId },
-      include: {
-        rtpHistory: {
-          orderBy: { timestamp: 'desc' },
-          take: 10,
-          include: {
-            user: {
-              select: { name: true }
-            }
-          }
-        },
-        _count: {
-          select: { rtpHistory: true }
-        }
-      }
+    const game = await Game.findByPk(gameId, {
+      include: [{
+        model: RtpHistory,
+        limit: 10,
+        order: [['timestamp', 'DESC']],
+        include: [{ model: User, attributes: ['name'] }]
+      }]
     });
 
     if (!game) {
@@ -138,13 +125,13 @@ export const getGameById = async (req: Request, res: Response): Promise<void> =>
  */
 export const getGameCategories = async (req: Request, res: Response): Promise<void> => {
   try {
-    const categories = await prisma.game.findMany({
+    const categories = await Game.findAll({
       where: { isActive: true },
-      select: { category: true },
-      distinct: ['category']
+      attributes: ['category'],
+      group: ['category']
     });
 
-    const categoryList = categories.map(c => c.category);
+    const categoryList = categories.map(c => (c as any).category);
 
     res.json(categoryList);
   } catch (error) {
@@ -161,13 +148,13 @@ export const getGameCategories = async (req: Request, res: Response): Promise<vo
  */
 export const getGameProviders = async (req: Request, res: Response): Promise<void> => {
   try {
-    const providers = await prisma.game.findMany({
+    const providers = await Game.findAll({
       where: { isActive: true },
-      select: { provider: true },
-      distinct: ['provider']
+      attributes: ['provider'],
+      group: ['provider']
     });
 
-    const providerList = providers.map(p => p.provider);
+    const providerList = providers.map(p => (p as any).provider);
 
     res.json(providerList);
   } catch (error) {
@@ -188,47 +175,49 @@ export const getGameStats = async (req: Request, res: Response): Promise<void> =
       totalGames,
       totalCategories,
       totalProviders,
-      avgRtp,
+      avgRtpResult,
       topGames
     ] = await Promise.all([
-      prisma.game.count({ where: { isActive: true } }),
-      prisma.game.findMany({
+      Game.count({ where: { isActive: true } }),
+      Game.findAll({
         where: { isActive: true },
-        select: { category: true },
-        distinct: ['category']
+        attributes: ['category'],
+        group: ['category']
       }),
-      prisma.game.findMany({
+      Game.findAll({
         where: { isActive: true },
-        select: { provider: true },
-        distinct: ['provider']
+        attributes: ['provider'],
+        group: ['provider']
       }),
-      prisma.game.aggregate({
+      Game.findAll({
         where: { isActive: true },
-        _avg: { currentRtp: true }
+        attributes: [[fn('AVG', col('currentRtp')), 'avgRtp']]
       }),
-      prisma.game.findMany({
+      Game.findAll({
         where: { isActive: true },
-        orderBy: { currentRtp: 'desc' },
-        take: 5,
-        select: {
-          id: true,
-          name: true,
-          provider: true,
-          currentRtp: true,
-          _count: {
-            select: { rtpHistory: true }
-          }
-        }
+        order: [['currentRtp', 'DESC']],
+        limit: 5,
+        attributes: [
+          'id',
+          'name',
+          'provider',
+          'currentRtp',
+          [fn('COUNT', col('rtpHistories.id')), 'rtpHistoryCount']
+        ],
+        include: [{ model: RtpHistory, attributes: [] }],
+        group: ['Game.id']
       })
     ]);
 
-    res.json({
-      totalGames,
-      totalCategories: totalCategories.length,
-      totalProviders: totalProviders.length,
-      averageRtp: avgRtp._avg.currentRtp || 0,
-      topRtpGames: topGames
-    });
+    const averageRtp = parseFloat(((avgRtpResult[0] as any)?.get('avgRtp')) || '0');
+
+      res.json({
+        totalGames,
+        totalCategories: totalCategories.length,
+        totalProviders: totalProviders.length,
+        averageRtp,
+        topRtpGames: topGames
+      });
   } catch (error) {
     console.error('Erro ao buscar estatísticas:', error);
     res.status(500).json({ 

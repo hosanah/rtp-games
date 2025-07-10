@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Op } from 'sequelize';
 import { AuthenticatedRequest } from '../types/auth';
-
-const prisma = new PrismaClient();
+import { RtpHistory } from '../models/rtpHistory';
+import { Game } from '../models/game';
+import { User } from '../models/user';
 
 /**
  * Adicionar registro de RTP
@@ -37,9 +38,7 @@ export const addRtpRecord = async (req: AuthenticatedRequest, res: Response): Pr
     }
 
     // Verificar se o jogo existe
-    const game = await prisma.game.findUnique({
-      where: { id: parseInt(gameId) }
-    });
+    const game = await Game.findByPk(parseInt(gameId));
 
     if (!game) {
       res.status(404).json({ 
@@ -50,26 +49,18 @@ export const addRtpRecord = async (req: AuthenticatedRequest, res: Response): Pr
     }
 
     // Criar registro RTP
-    const rtpRecord = await prisma.rtpHistory.create({
-      data: {
-        userId: req.user.userId,
-        gameId: parseInt(gameId),
-        rtpValue: parseFloat(rtpValue.toFixed(2)),
-        notes: notes || null
-      },
-      include: {
-        game: {
-          select: {
-            name: true,
-            provider: true
-          }
-        },
-        user: {
-          select: {
-            name: true
-          }
-        }
-      }
+    const newRecord = await RtpHistory.create({
+      userId: req.user.userId,
+      gameId: parseInt(gameId),
+      rtpValue: parseFloat(rtpValue.toFixed(2)),
+      notes: notes || null
+    });
+
+    const rtpRecord = await RtpHistory.findByPk(newRecord.id, {
+      include: [
+        { model: Game, attributes: ['name', 'provider'] },
+        { model: User, attributes: ['name'] }
+      ]
     });
 
     res.status(201).json(rtpRecord);
@@ -126,24 +117,16 @@ export const getUserRtpHistory = async (req: AuthenticatedRequest, res: Response
       }
     }
 
-    const [records, total] = await Promise.all([
-      prisma.rtpHistory.findMany({
-        where,
-        orderBy: { timestamp: 'desc' },
-        skip,
-        take: limitNum,
-        include: {
-          game: {
-            select: {
-              name: true,
-              provider: true,
-              category: true
-            }
-          }
-        }
-      }),
-      prisma.rtpHistory.count({ where })
-    ]);
+    const { rows: records, count: total } = await RtpHistory.findAndCountAll({
+      where,
+      order: [['timestamp', 'DESC']],
+      offset: skip,
+      limit: limitNum,
+      include: [{
+        model: Game,
+        attributes: ['name', 'provider', 'category']
+      }]
+    });
 
     res.json({
       records,
@@ -178,76 +161,67 @@ export const getUserRtpStats = async (req: AuthenticatedRequest, res: Response):
 
     const [
       totalRecords,
-      avgRtp,
+      avgRtpResult,
       bestRtp,
       worstRtp,
       recentRecords,
       gameStats
     ] = await Promise.all([
-      prisma.rtpHistory.count({
-        where: { userId: req.user.userId }
-      }),
-      prisma.rtpHistory.aggregate({
+      RtpHistory.count({ where: { userId: req.user.userId } }),
+      RtpHistory.findAll({
         where: { userId: req.user.userId },
-        _avg: { rtpValue: true }
+        attributes: [[fn('AVG', col('rtpValue')), 'avgRtp']]
       }),
-      prisma.rtpHistory.findFirst({
+      RtpHistory.findOne({
         where: { userId: req.user.userId },
-        orderBy: { rtpValue: 'desc' },
-        include: {
-          game: {
-            select: { name: true, provider: true }
-          }
-        }
+        order: [['rtpValue', 'DESC']],
+        include: [{ model: Game, attributes: ['name', 'provider'] }]
       }),
-      prisma.rtpHistory.findFirst({
+      RtpHistory.findOne({
         where: { userId: req.user.userId },
-        orderBy: { rtpValue: 'asc' },
-        include: {
-          game: {
-            select: { name: true, provider: true }
-          }
-        }
+        order: [['rtpValue', 'ASC']],
+        include: [{ model: Game, attributes: ['name', 'provider'] }]
       }),
-      prisma.rtpHistory.findMany({
+      RtpHistory.findAll({
         where: { userId: req.user.userId },
-        orderBy: { timestamp: 'desc' },
-        take: 5,
-        include: {
-          game: {
-            select: { name: true, provider: true }
-          }
-        }
+        order: [['timestamp', 'DESC']],
+        limit: 5,
+        include: [{ model: Game, attributes: ['name', 'provider'] }]
       }),
-      prisma.rtpHistory.groupBy({
-        by: ['gameId'],
+      RtpHistory.findAll({
+        attributes: [
+          'gameId',
+          [fn('COUNT', col('gameId')), 'count'],
+          [fn('AVG', col('rtpValue')), 'avgRtp']
+        ],
         where: { userId: req.user.userId },
-        _count: { gameId: true },
-        _avg: { rtpValue: true },
-        orderBy: { _count: { gameId: 'desc' } },
-        take: 5
+        group: ['gameId'],
+        order: [[fn('COUNT', col('gameId')), 'DESC']],
+        limit: 5
       })
     ]);
 
+    const averageRtp = parseFloat(((avgRtpResult[0] as any)?.get('avgRtp')) || '0');
+
     // Buscar informações dos jogos mais jogados
-    const gameIds = gameStats.map(stat => stat.gameId);
-    const games = await prisma.game.findMany({
-      where: { id: { in: gameIds } },
-      select: { id: true, name: true, provider: true }
+    const gameIds = gameStats.map(stat => stat.getDataValue('gameId'));
+    const games = await Game.findAll({
+      where: { id: gameIds },
+      attributes: ['id', 'name', 'provider']
     });
 
     const topGames = gameStats.map(stat => {
       const game = games.find(g => g.id === stat.gameId);
       return {
         game,
-        recordCount: stat._count.gameId,
-        averageRtp: stat._avg.rtpValue
+        recordCount: stat.getDataValue('count'),
+        averageRtp: stat.getDataValue('avgRtp')
       };
     });
 
     res.json({
       totalRecords,
-      averageRtp: avgRtp._avg.rtpValue || 0,
+      averageRtp,
       bestRtp,
       worstRtp,
       recentRecords,
@@ -288,9 +262,7 @@ export const getGameRtpHistory = async (req: Request, res: Response): Promise<vo
     }
 
     // Verificar se o jogo existe
-    const game = await prisma.game.findUnique({
-      where: { id: parseInt(gameId) }
-    });
+    const game = await Game.findByPk(parseInt(gameId));
 
     if (!game) {
       res.status(404).json({ 
@@ -315,36 +287,33 @@ export const getGameRtpHistory = async (req: Request, res: Response): Promise<vo
       }
     }
 
-    const [records, total, stats] = await Promise.all([
-      prisma.rtpHistory.findMany({
-        where,
-        orderBy: { timestamp: 'desc' },
-        skip,
-        take: limitNum,
-        include: {
-          user: {
-            select: { name: true }
-          }
-        }
-      }),
-      prisma.rtpHistory.count({ where }),
-      prisma.rtpHistory.aggregate({
-        where,
-        _avg: { rtpValue: true },
-        _min: { rtpValue: true },
-        _max: { rtpValue: true },
-        _count: { rtpValue: true }
-      })
-    ]);
+    const { rows: records, count: total } = await RtpHistory.findAndCountAll({
+      where,
+      order: [['timestamp', 'DESC']],
+      offset: skip,
+      limit: limitNum,
+      include: [{ model: User, attributes: ['name'] }]
+    });
+
+    const statsRow = await RtpHistory.findAll({
+      where,
+      attributes: [
+        [fn('AVG', col('rtpValue')), 'avgRtp'],
+        [fn('MIN', col('rtpValue')), 'minRtp'],
+        [fn('MAX', col('rtpValue')), 'maxRtp'],
+        [fn('COUNT', col('rtpValue')), 'count']
+      ]
+    });
+    const stats = statsRow[0] as any;
 
     res.json({
       game,
       records,
       stats: {
-        totalRecords: stats._count.rtpValue,
-        averageRtp: stats._avg.rtpValue || 0,
-        minRtp: stats._min.rtpValue || 0,
-        maxRtp: stats._max.rtpValue || 0
+        totalRecords: parseInt(stats.get('count') as any),
+        averageRtp: parseFloat(stats.get('avgRtp') as any) || 0,
+        minRtp: parseFloat(stats.get('minRtp') as any) || 0,
+        maxRtp: parseFloat(stats.get('maxRtp') as any) || 0
       },
       pagination: {
         page: pageNum,
@@ -387,9 +356,7 @@ export const deleteRtpRecord = async (req: AuthenticatedRequest, res: Response):
     }
 
     // Verificar se o registro existe e pertence ao usuário
-    const record = await prisma.rtpHistory.findUnique({
-      where: { id: recordId }
-    });
+    const record = await RtpHistory.findByPk(recordId);
 
     if (!record) {
       res.status(404).json({ 
@@ -408,9 +375,7 @@ export const deleteRtpRecord = async (req: AuthenticatedRequest, res: Response):
     }
 
     // Deletar registro
-    await prisma.rtpHistory.delete({
-      where: { id: recordId }
-    });
+    await RtpHistory.destroy({ where: { id: recordId } });
 
     res.json({ 
       message: 'Registro deletado com sucesso',
