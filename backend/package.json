@@ -15,7 +15,7 @@
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
-  "keywords": ["express", "prisma", "jwt", "mysql"],
+  "keywords": ["express", "prisma", "jwt", "postgres"],
   "author": "",
   "license": "ISC",
   "dependencies": {

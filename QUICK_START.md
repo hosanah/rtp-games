@@ -4,7 +4,7 @@
 
 ### 1. Pré-requisitos
 - Docker e Docker Compose instalados
-- Portas 3000, 3001 e 3306 disponíveis
+- Portas 3000, 3001 e 5432 disponíveis
 
 ### 2. Deploy Completo
 ```bash
@@ -19,7 +19,7 @@ cd rtp-games-dashboard
 ### 3. Acesse a Aplicação
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3001
-- **Banco MySQL**: localhost:3306
+- **Banco PostgreSQL**: localhost:5432
 
 ### 4. Login de Teste
 - **Email**: admin@rtpgames.com
@@ -31,7 +31,7 @@ cd rtp-games-dashboard
 
 ### 1. Iniciar Banco de Dados
 ```bash
-# Iniciar apenas o MySQL para desenvolvimento
+# Iniciar apenas o PostgreSQL para desenvolvimento
 ./scripts/dev.sh
 ```
 
@@ -52,7 +52,7 @@ yarn dev
 ### 4. Acessar
 - **Frontend**: http://localhost:3000
 - **Backend**: http://localhost:3001
-- **phpMyAdmin**: http://localhost:8080
+- **pgAdmin**: http://localhost:8080
 
 ---
 
@@ -112,10 +112,10 @@ yarn lint            # Linter
 ## 🗄️ Banco de Dados
 
 ### Credenciais (Desenvolvimento)
-- **Host**: localhost:3306
-- **Usuário**: root
-- **Senha**: password
-- **Database**: rtp_games_dashboard
+- **Host**: localhost:5432
+- **Usuário**: postgres
+- **Senha**: 2412055aa
+- **Database**: vigilancia
 
 ### Dados de Teste
 - 3 usuários pré-cadastrados
@@ -131,14 +131,14 @@ yarn lint            # Linter
 # Verificar portas
 lsof -i :3000
 lsof -i :3001
-lsof -i :3306
+lsof -i :5432
 
 # Parar containers
 docker-compose down
 ```
 
 ### Erro de conexão
-1. Verifique se o MySQL está rodando
+1. Verifique se o PostgreSQL está rodando
 2. Confirme as variáveis de ambiente
 3. Aguarde o banco inicializar (30s)
 

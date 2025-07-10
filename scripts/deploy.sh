@@ -28,7 +28,7 @@ if docker-compose ps | grep -q "Up"; then
     echo ""
     echo "🌐 Frontend disponível em: http://localhost:3000"
     echo "🔧 Backend API disponível em: http://localhost:3001"
-    echo "📊 Banco de dados MySQL na porta: 3306"
+    echo "📊 Banco de dados PostgreSQL na porta: 5432"
     echo ""
     echo "Para ver logs:"
     echo "  docker-compose logs -f"

@@ -1,6 +1,6 @@
 # RTP Games Dashboard
 
-Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com Next.js 14, Node.js, Express.js, MySQL e Prisma ORM.
+Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com Next.js 14, Node.js, Express.js, PostgreSQL e Prisma ORM.
 
 ## 🚀 Tecnologias
 
@@ -17,7 +17,7 @@ Uma aplicação completa para monitoramento e análise de RTP (Return to Player)
 - **Node.js** com **Express.js**
 - **TypeScript**
 - **Prisma ORM**
-- **MySQL 8.0**
+- **PostgreSQL**
 - **JWT** para autenticação
 - **bcrypt** para hash de senhas
 - **CORS** e **Helmet** para segurança
@@ -113,12 +113,12 @@ yarn dev
 ### Desenvolvimento
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3001
-- **phpMyAdmin**: http://localhost:8080
+- **pgAdmin**: http://localhost:8080
 
 ### Produção (Docker)
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3001
-- **MySQL**: localhost:3306
+- **PostgreSQL**: localhost:5432
 
 ## 🔐 Credenciais de Teste
 
@@ -131,10 +131,10 @@ yarn dev
 - **Email**: maria@example.com / **Senha**: 123456
 
 ### Banco de Dados (Desenvolvimento)
-- **Host**: localhost:3306
-- **Usuário**: root
-- **Senha**: password
-- **Database**: rtp_games_dashboard
+- **Host**: localhost:5432
+- **Usuário**: postgres
+- **Senha**: 2412055aa
+- **Database**: vigilancia
 
 ## 📁 Estrutura do Projeto
 
@@ -240,7 +240,7 @@ yarn lint            # Linter
 ### Problemas Comuns
 
 1. **Erro de conexão com banco**
-   - Verifique se o MySQL está rodando
+   - Verifique se o PostgreSQL está rodando
    - Confirme as credenciais no .env
 
 2. **Erro de CORS**
@@ -275,7 +275,7 @@ Este projeto está sob a licença ISC.
 
 ## 👥 Autores
 
-Desenvolvido como projeto de demonstração de stack completa com Next.js 14, Node.js, Express.js, MySQL e Docker.
+Desenvolvido como projeto de demonstração de stack completa com Next.js 14, Node.js, Express.js, PostgreSQL e Docker.
 
 ---
 
