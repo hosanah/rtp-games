@@ -1,70 +1,52 @@
-# Use Node.js 20 LTS
-FROM node:20-alpine AS base
+# Dockerfile multi-estágio para ambiente de desenvolvimento e produção
+# Imagem base para ambos os ambientes
+FROM node:18-alpine AS base
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Diretório de trabalho
 WORKDIR /app
 
-# Install frontend dependencies
-COPY frontend/package.json frontend/yarn.lock* frontend/package-lock.json* frontend/pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Copiar arquivos de configuração
+COPY frontend/package.json ./
+COPY frontend/pnpm-lock.yaml ./
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY frontend ./
+# Instalar pnpm e dependências
+RUN npm i --force
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Disable telemetry during the build to keep the image clean.
-ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
-
-# Production image, copy all the files and run next
-FROM base AS runner
+# Estágio de build
+FROM base AS build
 WORKDIR /app
 
-ENV NODE_ENV production
-# Disable Next.js telemetry in the running container as well.
-ENV NEXT_TELEMETRY_DISABLED 1
+# Copiar todo o código fonte
+COPY frontend/ ./
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Construir a aplicação
+RUN npm run build
 
-COPY --from=builder /app/public ./public
+# Estágio de produção
+FROM nginx:alpine AS production
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Copiar arquivos estáticos da build para o Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Verificar se os arquivos foram copiados corretamente
+RUN ls -la /usr/share/nginx/html && \
+    if [ ! -f /usr/share/nginx/html/index.html ]; then \
+      echo "ERRO: index.html não encontrado na pasta de build!" && \
+      exit 1; \
+    fi
 
-USER nextjs
+# Configuração do Nginx para SPA (Single Page Application)
+RUN echo 'server { \
+    listen 80; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    location / { \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
-EXPOSE 3000
+# Expor porta para produção
+EXPOSE 80
 
-ENV PORT 3000
-# set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", "server.js"]
-
+# Comando para iniciar o Nginx
+CMD ["nginx", "-g", "daemon off;"]
