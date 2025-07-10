@@ -1,23 +1,22 @@
-'use client'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { GamepadIcon } from 'lucide-react'
 
 export default function HomePage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { isAuthenticated, loading } = useAuth()
 
   useEffect(() => {
     if (!loading) {
       if (isAuthenticated) {
-        router.push('/dashboard')
+        navigate('/dashboard')
       } else {
-        router.push('/login')
+        navigate('/login')
       }
     }
-  }, [isAuthenticated, loading, router])
+  }, [isAuthenticated, loading, navigate])
 
   // Loading screen
   return (

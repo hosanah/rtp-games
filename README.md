@@ -1,12 +1,11 @@
 # RTP Games Dashboard
 
-Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com Next.js 14, Node.js, Express.js, PostgreSQL e Sequelize ORM.
+Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com React + Vite, Node.js, Express.js, PostgreSQL e Prisma ORM.
 
 ## 🚀 Tecnologias
 
 ### Frontend
-- **Next.js 14** com App Router
-- **React Server Components**
+- **React** com **Vite**
 - **TypeScript**
 - **TailwindCSS 3.4.17**
 - **React Hook Form** com validação Zod
@@ -79,8 +78,8 @@ npm run dev
 
 # Em outro terminal, iniciar o frontend
 cd frontend
-yarn install
-yarn dev
+npm install
+npm run dev
 ```
 
 #### Opção B: Instalação Manual
@@ -96,10 +95,10 @@ npm run dev
 
 # Frontend
 cd frontend
-yarn install
+npm install
 cp .env.local.example .env.local
 # Configure as variáveis no .env.local
-yarn dev
+npm run dev
 ```
 
 ### 3. Deploy em Produção
@@ -149,9 +148,9 @@ rtp-games-dashboard/
 │   │   └── utils/           # Utilitários
 │   ├── models/              # Sequelize models
 │   └── package.json
-├── frontend/                # App Next.js 14
+├── frontend/                # App React + Vite
 │   ├── src/
-│   │   ├── app/             # App Router (páginas)
+│   │   ├── pages/           # Páginas
 │   │   ├── components/      # Componentes React
 │   │   ├── hooks/           # Hooks customizados
 │   │   ├── lib/             # Utilitários e configurações
@@ -178,10 +177,10 @@ npm run seed            # Popular banco com dados
 
 ### Frontend
 ```bash
-yarn dev             # Desenvolvimento
-yarn build           # Build para produção
-yarn start           # Iniciar produção
-yarn lint            # Linter
+npm run dev          # Desenvolvimento
+npm run build        # Build para produção
+npm run start        # Iniciar produção
+npm run lint         # Linter
 ```
 
 ### Docker
@@ -274,7 +273,7 @@ Este projeto está sob a licença ISC.
 
 ## 👥 Autores
 
-Desenvolvido como projeto de demonstração de stack completa com Next.js 14, Node.js, Express.js, PostgreSQL e Docker.
+Desenvolvido como projeto de demonstração de stack completa com React + Vite, Node.js, Express.js, PostgreSQL e Docker.
 
 ---
 

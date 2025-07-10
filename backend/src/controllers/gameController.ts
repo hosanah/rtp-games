@@ -49,6 +49,7 @@ export const getAllGames = async (req: Request, res: Response): Promise<void> =>
       [sortBy as string, (sortOrder as string).toUpperCase() as 'ASC' | 'DESC']
     ];
 
+
     const { rows: games, count: total } = await Game.findAndCountAll({
       where,
       order,
