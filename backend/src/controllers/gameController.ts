@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Op, fn, col } from 'sequelize';
+import { Op, fn, col, Order } from 'sequelize';
 import { AuthenticatedRequest } from '../types/auth';
 import { Game } from '../models/game';
 import { RtpHistory } from '../models/rtpHistory';
@@ -45,7 +45,10 @@ export const getAllGames = async (req: Request, res: Response): Promise<void> =>
       ];
     }
 
-    const order = [[sortBy as string, sortOrder as string]];
+    const order: Order = [
+      [sortBy as string, (sortOrder as string).toUpperCase() as 'ASC' | 'DESC']
+    ];
+
 
     const { rows: games, count: total } = await Game.findAndCountAll({
       where,
