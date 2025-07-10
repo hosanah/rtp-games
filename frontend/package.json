@@ -1,13 +1,13 @@
 {
   "name": "rtp-games-dashboard-frontend",
   "version": "1.0.0",
-  "description": "Frontend do RTP Games Dashboard - Next.js 14 com TypeScript e TailwindCSS",
+  "description": "Frontend do RTP Games Dashboard - React + Vite com TypeScript e TailwindCSS",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview",
+    "lint": "eslint . --ext .ts,.tsx",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,7 +17,7 @@
     "axios": "^1.10.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.525.0",
-    "next": "14.2.30",
+    "react-router-dom": "^6.23.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.60.0",
@@ -28,13 +28,17 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-router-dom": "^5.3.3",
     "eslint": "^8",
-    "eslint-config-next": "14.2.30",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
     "postcss": "^8",
     "tailwindcss": "3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^5.2.0",
+    "@vitejs/plugin-react": "^4.2.1"
   },
-  "keywords": ["nextjs", "react", "typescript", "tailwindcss", "rtp", "games", "dashboard"],
+  "keywords": ["vite", "react", "typescript", "tailwindcss", "rtp", "games", "dashboard"],
   "author": "",
   "license": "ISC"
 }
