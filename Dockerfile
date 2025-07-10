@@ -7,7 +7,6 @@ WORKDIR /app
 
 # Copiar arquivos de configuração
 COPY frontend/package.json ./
-COPY frontend/pnpm-lock.yaml ./
 
 # Instalar pnpm e dependências
 RUN npm i --force
