@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import { PrismaClient } from '@prisma/client';
+import sequelize from './models';
 
 // Importar rotas
 import authRoutes from './routes/auth';
@@ -14,8 +14,13 @@ import rtpRoutes from './routes/rtp';
 const app = express();
 const PORT = parseInt(process.env.PORT || '3001');
 
-// Inicializar Prisma Client
-export const prisma = new PrismaClient();
+// Testar conexão com o banco de dados via Sequelize
+export const db = sequelize;
+db.authenticate().then(() => {
+  console.log('Conectado ao banco de dados via Sequelize');
+}).catch(err => {
+  console.error('Erro ao conectar ao banco de dados:', err);
+});
 
 // Middleware de segurança
 app.use(helmet());
@@ -76,7 +81,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM recebido, encerrando servidor...');
-  await prisma.$disconnect();
+  await db.close();
   server.close(() => {
     console.log('Servidor encerrado.');
     process.exit(0);
@@ -85,7 +90,7 @@ process.on('SIGTERM', async () => {
 
 process.on('SIGINT', async () => {
   console.log('SIGINT recebido, encerrando servidor...');
-  await prisma.$disconnect();
+  await db.close();
   server.close(() => {
     console.log('Servidor encerrado.');
     process.exit(0);
