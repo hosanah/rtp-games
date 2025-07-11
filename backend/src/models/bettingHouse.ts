@@ -7,6 +7,7 @@ interface BettingHouseAttributes {
   apiName: string;
   apiUrl: string;
   updateInterval: number;
+  updateIntervalUnit: 'seconds' | 'minutes';
   currency: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -21,6 +22,7 @@ export class BettingHouse extends Model<BettingHouseAttributes, BettingHouseCrea
   public apiName!: string;
   public apiUrl!: string;
   public updateInterval!: number;
+  public updateIntervalUnit!: 'seconds' | 'minutes';
   public currency!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -48,6 +50,11 @@ BettingHouse.init(
     updateInterval: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    updateIntervalUnit: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'seconds',
     },
     currency: {
       type: DataTypes.STRING,

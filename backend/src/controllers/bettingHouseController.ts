@@ -3,9 +3,9 @@ import { BettingHouse } from '../models/bettingHouse';
 
 export const createBettingHouse = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, apiName, apiUrl, updateInterval, currency } = req.body;
+    const { name, apiName, apiUrl, updateInterval, updateIntervalUnit, currency } = req.body;
 
-    if (!name || !apiName || !apiUrl || !updateInterval || !currency) {
+    if (!name || !apiName || !apiUrl || !updateInterval || !updateIntervalUnit || !currency) {
       res.status(400).json({
         error: 'Todos os campos são obrigatórios',
         code: 'MISSING_FIELDS'
@@ -18,6 +18,7 @@ export const createBettingHouse = async (req: Request, res: Response): Promise<v
       apiName,
       apiUrl,
       updateInterval,
+      updateIntervalUnit,
       currency
     });
 
@@ -80,8 +81,8 @@ export const updateBettingHouse = async (req: Request, res: Response): Promise<v
       return;
     }
 
-    const { name, apiName, apiUrl, updateInterval, currency } = req.body;
-    await house.update({ name, apiName, apiUrl, updateInterval, currency });
+    const { name, apiName, apiUrl, updateInterval, updateIntervalUnit, currency } = req.body;
+    await house.update({ name, apiName, apiUrl, updateInterval, updateIntervalUnit, currency });
     res.json(house);
   } catch (error) {
     console.error('Erro ao atualizar casa de aposta:', error);

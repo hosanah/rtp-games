@@ -16,6 +16,7 @@
 
 - 2025-07-11: Ajustado link de navegação para "/houses" no Header do frontend para usar `to` em vez de `href`.
 - 2025-07-12: Adicionada opção de tema "Floresta" com paleta personalizada.
+- 2025-07-13: Adicionado campo `updateIntervalUnit` em `betting_houses` para definir se o intervalo está em segundos ou minutos.
 
 ## Estrutura de Banco de Dados
 

@@ -67,6 +67,7 @@ export interface BettingHouse {
   apiName: string
   apiUrl: string
   updateInterval: number
+  updateIntervalUnit: 'seconds' | 'minutes'
   currency: string
   createdAt: string
   updatedAt: string

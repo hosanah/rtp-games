@@ -11,6 +11,7 @@ interface HouseFormData {
   apiName: string
   apiUrl: string
   updateInterval: number
+  updateIntervalUnit: 'seconds' | 'minutes'
   currency: string
 }
 
@@ -65,6 +66,7 @@ export default function HousesPage() {
       apiName: house.apiName,
       apiUrl: house.apiUrl,
       updateInterval: house.updateInterval,
+      updateIntervalUnit: house.updateIntervalUnit,
       currency: house.currency,
     })
   }
@@ -102,7 +104,25 @@ export default function HousesPage() {
               <Input label="Nome" error={errors.name?.message} {...register('name', { required: true })} />
               <Input label="API Name" error={errors.apiName?.message} {...register('apiName', { required: true })} />
               <Input label="API URL" error={errors.apiUrl?.message} {...register('apiUrl', { required: true })} />
-              <Input label="Intervalo (minutos)" type="number" error={errors.updateInterval?.message} {...register('updateInterval', { required: true, valueAsNumber: true })} />
+              <div className="flex space-x-2">
+                <Input
+                  label="Intervalo"
+                  type="number"
+                  className="flex-1"
+                  error={errors.updateInterval?.message}
+                  {...register('updateInterval', { required: true, valueAsNumber: true })}
+                />
+                <div className="w-32">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Unidade</label>
+                  <select
+                    className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                    {...register('updateIntervalUnit', { required: true })}
+                  >
+                    <option value="seconds">Segundos</option>
+                    <option value="minutes">Minutos</option>
+                  </select>
+                </div>
+              </div>
               <Input label="Moeda" error={errors.currency?.message} {...register('currency', { required: true })} />
               <div className="flex space-x-2">
                 <Button type="submit" loading={loading}>
@@ -143,7 +163,9 @@ export default function HousesPage() {
                       <td className="px-4 py-2">{house.name}</td>
                       <td className="px-4 py-2">{house.apiName}</td>
                       <td className="px-4 py-2">{house.apiUrl}</td>
-                      <td className="px-4 py-2">{house.updateInterval}</td>
+                      <td className="px-4 py-2">
+                        {house.updateInterval} {house.updateIntervalUnit === 'seconds' ? 's' : 'min'}
+                      </td>
                       <td className="px-4 py-2">{house.currency}</td>
                       <td className="px-4 py-2 space-x-2">
                         <Button size="sm" variant="outline" onClick={() => handleEdit(house)}>
