@@ -233,6 +233,13 @@ npm run lint         # Linter
 - `GET /api/rtp/games/:id/history` - Histórico do jogo
 - `DELETE /api/rtp/:id` - Deletar registro
 
+### Betting Houses
+- `POST /api/houses` - Criar casa de aposta
+- `GET /api/houses` - Listar casas de aposta
+- `GET /api/houses/:id` - Detalhes da casa de aposta
+- `PUT /api/houses/:id` - Atualizar casa de aposta
+- `DELETE /api/houses/:id` - Remover casa de aposta
+
 ## 🐛 Troubleshooting
 
 ### Problemas Comuns

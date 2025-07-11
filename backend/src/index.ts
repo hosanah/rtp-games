@@ -6,6 +6,7 @@ import sequelize from './models';
 
 // Importar rotas
 import authRoutes from './routes/auth';
+import bettingHouseRoutes from './routes/bettingHouse';
 
 
 const app = express();
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rotas
 app.use('/api/auth', authRoutes);
+app.use('/api/houses', bettingHouseRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {
