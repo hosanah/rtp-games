@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 
-export type Theme = 'light' | 'dark' | 'system'
+export type Theme = 'light' | 'dark' | 'system' | 'forest'
 
 interface ThemeContextProps {
   theme: Theme
@@ -14,10 +14,12 @@ function applyTheme(theme: Theme) {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   const resolved = theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme
 
+  root.classList.remove('dark', 'forest')
+
   if (resolved === 'dark') {
     root.classList.add('dark')
-  } else {
-    root.classList.remove('dark')
+  } else if (resolved === 'forest') {
+    root.classList.add('forest')
   }
 }
 
@@ -26,7 +28,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('theme') as Theme | null
-    if (saved === 'light' || saved === 'dark' || saved === 'system') {
+    if (
+      saved === 'light' ||
+      saved === 'dark' ||
+      saved === 'system' ||
+      saved === 'forest'
+    ) {
       setThemeState(saved)
       applyTheme(saved)
     } else {
