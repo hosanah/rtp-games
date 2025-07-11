@@ -62,11 +62,13 @@ export class RtpSocket {
     try {
       const res = await axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 2, 16, 2]), {
         responseType: 'arraybuffer',
+        timeout: Number(process.env.RTP_API_TIMEOUT_MS || 10000),
+        family: 4,
         headers: {
           'Content-Type': 'application/x-protobuf',
-          'Origin': house.apiUrl.split('/').slice(0, 3).join('/'),
+          Origin: house.apiUrl.split('/').slice(0, 3).join('/'),
           'User-Agent': 'Mozilla/5.0',
-          'accept': 'application/x-protobuf',
+          accept: 'application/x-protobuf',
         },
       });
       const updates = this.parseProto(res.data, house.id);
