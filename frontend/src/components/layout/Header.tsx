@@ -12,7 +12,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <GamepadIcon className="h-8 w-8 text-primary-600" />
             <span className="text-xl font-bold text-secondary-900">
               RTP Games Dashboard
@@ -23,25 +23,25 @@ export default function Header() {
           {isAuthenticated && (
             <nav className="hidden md:flex space-x-8">
               <Link
-                href="/dashboard"
+                to="/dashboard"
                 className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Dashboard
               </Link>
               <Link
-                href="/games"
+                to="/games"
                 className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Jogos
               </Link>
               <Link
-                href="/rtp-history"
+                to="/rtp-history"
                 className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Histórico RTP
               </Link>
               <Link
-                href="/stats"
+                to="/stats"
                 className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <BarChart3Icon className="h-4 w-4 inline mr-1" />
@@ -72,12 +72,12 @@ export default function Header() {
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <Link href="/login">
+                <Link to="/login">
                   <Button variant="ghost" size="sm">
                     Entrar
                   </Button>
                 </Link>
-                <Link href="/register">
+                <Link to="/register">
                   <Button variant="primary" size="sm">
                     Cadastrar
                   </Button>
