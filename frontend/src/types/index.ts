@@ -60,6 +60,18 @@ export interface GameStats {
   }>
 }
 
+// Tipos de casas de aposta
+export interface BettingHouse {
+  id: number
+  name: string
+  apiName: string
+  apiUrl: string
+  updateInterval: number
+  currency: string
+  createdAt: string
+  updatedAt: string
+}
+
 // Tipos de RTP
 export interface RtpRecord {
   id: number
