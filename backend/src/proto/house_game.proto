@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message ProviderInfo {
+  string name = 2;
+  string slug = 5;
+}
+
+message HouseGame {
+  uint64 id = 1;
+  string name = 2;
+  ProviderInfo provider = 3;
+  string image = 4;
+  uint32 rtpDecimal = 5;
+  uint64 signedInt = 6;
+}
+
+message HouseGameList {
+  repeated HouseGame games = 2;
+}

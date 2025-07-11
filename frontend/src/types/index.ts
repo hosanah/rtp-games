@@ -73,6 +73,15 @@ export interface BettingHouse {
   updatedAt: string
 }
 
+export interface HouseGame {
+  id: string
+  name: string
+  provider: string
+  image?: string
+  rtpDecimal: number
+  signedInt: string
+}
+
 // Tipos de RTP
 export interface RtpRecord {
   id: number
