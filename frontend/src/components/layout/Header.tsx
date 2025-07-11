@@ -41,7 +41,7 @@ export default function Header() {
                 Jogos
               </Link>
               <Link
-                href="/houses"
+                to="/houses"
                 className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Casas
