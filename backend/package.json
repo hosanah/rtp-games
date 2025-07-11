@@ -4,7 +4,7 @@
   "description": "Backend API para RTP Games Dashboard",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/proto dist/",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "migrate": "sequelize db:migrate",

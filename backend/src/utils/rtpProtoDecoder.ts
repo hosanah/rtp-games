@@ -1,7 +1,11 @@
+import fs from 'fs';
 import path from 'path';
 import { loadSync } from 'protobufjs';
 
-const root = loadSync(path.join(__dirname, '../proto/game.proto'));
+const protoInDist = path.join(__dirname, '../proto/game.proto');
+const protoInSrc = path.join(__dirname, '../../src/proto/game.proto');
+const protoPath = fs.existsSync(protoInDist) ? protoInDist : protoInSrc;
+const root = loadSync(protoPath);
 const GameRtpList = root.lookupType('GameRtpList');
 
 export interface DecodedGameRtp {
