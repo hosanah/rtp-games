@@ -2,6 +2,7 @@ import React from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/Card'
 import { useAuth } from '@/hooks/useAuth'
 import { GamepadIcon, TrendingUpIcon, BarChart3Icon, ClockIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -103,8 +104,8 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <a
-                  href="/games"
+                <Link
+                  to="/games"
                   className="block p-3 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors"
                 >
                   <div className="flex items-center">
@@ -113,9 +114,9 @@ export default function DashboardPage() {
                       Ver Todos os Jogos
                     </span>
                   </div>
-                </a>
-                <a
-                  href="/rtp-history"
+                </Link>
+                <Link
+                  to="/rtp-history"
                   className="block p-3 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors"
                 >
                   <div className="flex items-center">
@@ -124,9 +125,9 @@ export default function DashboardPage() {
                       Histórico RTP
                     </span>
                   </div>
-                </a>
-                <a
-                  href="/stats"
+                </Link>
+                <Link
+                  to="/stats"
                   className="block p-3 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors"
                 >
                   <div className="flex items-center">
@@ -135,7 +136,7 @@ export default function DashboardPage() {
                       Estatísticas Detalhadas
                     </span>
                   </div>
-                </a>
+                </Link>
               </div>
             </CardContent>
           </Card>

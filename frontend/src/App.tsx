@@ -5,6 +5,7 @@ import LoginPage from './pages/login/Login'
 import RegisterPage from './pages/register/Register'
 import DashboardPage from './pages/dashboard/Dashboard'
 import Layout from './components/layout/Layout'
+import PrivateRoute from './components/routing/PrivateRoute'
 
 export default function App() {
   return (
@@ -15,9 +16,11 @@ export default function App() {
       <Route
         path="/dashboard"
         element={
-          <Layout>
-            <DashboardPage />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <DashboardPage />
+            </Layout>
+          </PrivateRoute>
         }
       />
     </Routes>

@@ -60,7 +60,7 @@ export default function RegisterPage() {
         <p className="mt-2 text-center text-sm text-secondary-600">
           Ou{' '}
           <Link
-            href="/login"
+            to="/login"
             className="font-medium text-primary-600 hover:text-primary-500"
           >
             entre na sua conta existente

@@ -1,11 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import Button from '@/components/ui/Button'
 import { GamepadIcon, UserIcon, LogOutIcon, BarChart3Icon } from 'lucide-react'
 
 export default function Header() {
+  const navigate = useNavigate()
   const { user, logout, isAuthenticated } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <header className="bg-white shadow-sm border-b border-secondary-200">
@@ -63,7 +69,7 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="text-secondary-600 hover:text-error-600"
                 >
                   <LogOutIcon className="h-4 w-4 mr-1" />
