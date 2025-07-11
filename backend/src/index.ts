@@ -7,6 +7,8 @@ import sequelize from './models';
 // Importar rotas
 import authRoutes from './routes/auth';
 import bettingHouseRoutes from './routes/bettingHouse';
+import gameRoutes from './routes/game';
+import initWebSocket from './websocket';
 
 
 const app = express();
@@ -36,6 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 // Rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/houses', bettingHouseRoutes);
+app.use('/api/games', gameRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {
@@ -71,6 +74,8 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`📊 RTP Games Dashboard API iniciada`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
 });
+
+initWebSocket(server);
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {

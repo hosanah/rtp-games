@@ -10,10 +10,17 @@
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all"
   },
-  "keywords": ["express", "sequelize", "jwt", "postgres"],
+  "keywords": [
+    "express",
+    "sequelize",
+    "jwt",
+    "postgres"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/ws": "^8.18.1",
+    "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -21,10 +28,10 @@
     "express-rate-limit": "^7.4.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "sequelize": "^6.37.1",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
-    "axios": "^1.6.8"
+    "sequelize": "^6.37.1",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -38,4 +45,3 @@
     "typescript": "^5.7.2"
   }
 }
-
