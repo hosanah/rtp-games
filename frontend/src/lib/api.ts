@@ -115,6 +115,34 @@ export const rtpApi = {
     api.delete(`/rtp/${id}`),
 }
 
+// Funções de casas de aposta
+export const housesApi = {
+  create: (data: {
+    name: string
+    apiName: string
+    apiUrl: string
+    updateInterval: number
+    currency: string
+  }) => api.post('/houses', data),
+
+  getAll: () => api.get('/houses'),
+
+  getById: (id: number) => api.get(`/houses/${id}`),
+
+  update: (
+    id: number,
+    data: {
+      name: string
+      apiName: string
+      apiUrl: string
+      updateInterval: number
+      currency: string
+    }
+  ) => api.put(`/houses/${id}`, data),
+
+  remove: (id: number) => api.delete(`/houses/${id}`),
+}
+
 // Função para verificar se a API está online
 export const checkApiHealth = async (): Promise<boolean> => {
   try {
