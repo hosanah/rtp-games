@@ -28,17 +28,21 @@ export default function App() {
       <Route
         path="/houses"
         element={
-          <Layout>
-            <HousesPage />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <HousesPage />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/games"
         element={
-          <Layout>
-            <GamesPage />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <GamesPage />
+            </Layout>
+          </PrivateRoute>
         }
       />
     </Routes>
