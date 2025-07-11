@@ -35,10 +35,10 @@ export default function Header() {
                 Jogos
               </Link>
               <Link
-                to="/rtp-history"
+                href="/houses"
                 className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                Histórico RTP
+                Casas
               </Link>
               <Link
                 to="/stats"

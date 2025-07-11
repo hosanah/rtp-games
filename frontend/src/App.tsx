@@ -4,6 +4,7 @@ import HomePage from './pages/Home'
 import LoginPage from './pages/login/Login'
 import RegisterPage from './pages/register/Register'
 import DashboardPage from './pages/dashboard/Dashboard'
+import HousesPage from './pages/houses/Houses'
 import Layout from './components/layout/Layout'
 
 export default function App() {
@@ -17,6 +18,14 @@ export default function App() {
         element={
           <Layout>
             <DashboardPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/houses"
+        element={
+          <Layout>
+            <HousesPage />
           </Layout>
         }
       />
