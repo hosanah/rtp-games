@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: linear-gradient(to bottom, #ffffff, #dbeafe);
+  --foreground: #000000;
+}
+
+.dark {
+  --background: linear-gradient(to bottom, #000000, #1e3a8a);
+  --foreground: #ffffff;
+}
+
+.forest {
+  --background: linear-gradient(to bottom, #e6f4ea, #2c5f2d);
+  --foreground: #043f1c;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -17,6 +17,7 @@ export default function ThemeToggle() {
       <option value="light">Claro</option>
       <option value="dark">Escuro</option>
       <option value="system">Sistema</option>
+      <option value="forest">Floresta</option>
     </select>
   )
 }
