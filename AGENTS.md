@@ -19,6 +19,7 @@
 - 2025-07-13: Adicionado campo `updateIntervalUnit` em `betting_houses` para definir se o intervalo está em segundos ou minutos.
 - 2025-07-15: Ajustado componente `Card` para aplicar cores de fundo no modo escuro e evitar texto branco em fundo branco.
 - 2025-07-16: Implementado serviço WebSocket no backend para envio de RTP em tempo real e adicionada página `Games` no frontend.
+- 2025-07-17: WebSocket agora recarrega periodicamente as casas de aposta para detectar novas entradas sem duplicar intervalos.
 
 ## Estrutura de Banco de Dados
 

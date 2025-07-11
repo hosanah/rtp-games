@@ -14,6 +14,8 @@ interface RtpUpdate {
 export class RtpSocket {
   private wss: WebSocketServer;
   private clients = new Set<WebSocket>();
+  private houseIntervals = new Map<number, NodeJS.Timeout>();
+  private reloadTimer?: NodeJS.Timeout;
 
   constructor(server: any) {
     this.wss = new WebSocketServer({ server, path: '/ws' });
@@ -24,14 +26,34 @@ export class RtpSocket {
   }
 
   async start() {
+    await this.reloadHouses();
+    const reloadMs = Number(process.env.HOUSE_RELOAD_INTERVAL_MS || 300000);
+    this.reloadTimer = setInterval(
+      () => this.reloadHouses().catch(err => console.error('Erro reloading houses', err)),
+      reloadMs
+    );
+  }
+
+  private async reloadHouses() {
     const houses = await BettingHouse.findAll();
+    const activeIds = new Set<number>();
     for (const house of houses) {
-      const intervalMs =
-        house.updateIntervalUnit === 'minutes'
-          ? house.updateInterval * 60000
-          : house.updateInterval * 1000;
-      setInterval(() => this.fetchAndBroadcast(house), intervalMs);
-      this.fetchAndBroadcast(house).catch(() => {});
+      activeIds.add(house.id);
+      if (!this.houseIntervals.has(house.id)) {
+        const intervalMs =
+          house.updateIntervalUnit === 'minutes'
+            ? house.updateInterval * 60000
+            : house.updateInterval * 1000;
+        const timer = setInterval(() => this.fetchAndBroadcast(house), intervalMs);
+        this.houseIntervals.set(house.id, timer);
+        this.fetchAndBroadcast(house).catch(() => {});
+      }
+    }
+    for (const [id, timer] of this.houseIntervals) {
+      if (!activeIds.has(id)) {
+        clearInterval(timer);
+        this.houseIntervals.delete(id);
+      }
     }
   }
 

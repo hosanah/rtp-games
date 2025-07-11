@@ -50,6 +50,7 @@ Uma aplicação completa para monitoramento e análise de RTP (Return to Player)
 - ✅ Histórico pessoal
 - ✅ Estatísticas detalhadas
 - ✅ Análise por jogo
+- ✅ Atualização em tempo real via WebSocket (novas casas são detectadas automaticamente)
 
 ## 🛠️ Instalação e Configuração
 
