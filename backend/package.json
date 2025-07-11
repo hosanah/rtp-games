@@ -11,7 +11,7 @@
     "seed": "sequelize db:seed:all",
     "test": "ts-node tests/bettingHouseController.test.ts",
     "seed": "sequelize db:seed:all",
-    ,"test": "jest"
+    "test": "jest"
   },
   "keywords": [
     "express",
