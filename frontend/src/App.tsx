@@ -5,6 +5,7 @@ import LoginPage from './pages/login/Login'
 import RegisterPage from './pages/register/Register'
 import DashboardPage from './pages/dashboard/Dashboard'
 import HousesPage from './pages/houses/Houses'
+import GamesPage from './pages/games/Games'
 import Layout from './components/layout/Layout'
 import PrivateRoute from './components/routing/PrivateRoute'
 
@@ -29,6 +30,14 @@ export default function App() {
         element={
           <Layout>
             <HousesPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/games"
+        element={
+          <Layout>
+            <GamesPage />
           </Layout>
         }
       />
