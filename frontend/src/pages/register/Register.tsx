@@ -49,19 +49,19 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <GamepadIcon className="h-12 w-12 text-primary-600" />
+          <GamepadIcon className="h-12 w-12 text-blue-600" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-bold text-secondary-900">
+        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Crie sua conta
         </h2>
-        <p className="mt-2 text-center text-sm text-secondary-600">
+        <p className="mt-2 text-center text-sm text-gray-600">
           Ou{' '}
           <Link
             to="/login"
-            className="font-medium text-primary-600 hover:text-primary-500"
+            className="font-medium text-blue-600 hover:text-blue-500"
           >
             entre na sua conta existente
           </Link>
@@ -71,12 +71,12 @@ export default function RegisterPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <Card>
           <CardHeader>
-            <h3 className="text-lg font-medium text-secondary-900">Cadastro</h3>
+            <h3 className="text-lg font-medium text-gray-900">Cadastro</h3>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {error && (
-                <div className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-md">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                   {error}
                 </div>
               )}

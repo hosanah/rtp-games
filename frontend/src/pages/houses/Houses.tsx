@@ -88,13 +88,13 @@ export default function HousesPage() {
     <div className="space-y-6">
         <Card>
           <CardHeader>
-            <h3 className="text-lg font-medium text-secondary-900">
+            <h3 className="text-lg font-medium text-gray-900">
               {editingId ? 'Editar Casa de Aposta' : 'Nova Casa de Aposta'}
             </h3>
           </CardHeader>
           <CardContent>
             {error && (
-              <div className="mb-4 bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-md">
+              <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                 {error}
               </div>
             )}
@@ -120,13 +120,13 @@ export default function HousesPage() {
 
         <Card>
           <CardHeader>
-            <h3 className="text-lg font-medium text-secondary-900">Casas de Aposta</h3>
+            <h3 className="text-lg font-medium text-gray-900">Casas de Aposta</h3>
           </CardHeader>
           <CardContent>
             {houses.length === 0 ? (
-              <p className="text-secondary-600">Nenhuma casa de aposta cadastrada.</p>
+              <p className="text-gray-600">Nenhuma casa de aposta cadastrada.</p>
             ) : (
-              <table className="min-w-full divide-y divide-secondary-200 text-sm">
+              <table className="min-w-full divide-y divide-gray-200 text-sm">
                 <thead>
                   <tr>
                     <th className="px-4 py-2 text-left">Nome</th>
@@ -137,7 +137,7 @@ export default function HousesPage() {
                     <th className="px-4 py-2" />
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-secondary-200">
+                <tbody className="divide-y divide-gray-200">
                   {houses.map((house) => (
                     <tr key={house.id}>
                       <td className="px-4 py-2">{house.name}</td>

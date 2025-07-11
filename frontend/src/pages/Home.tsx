@@ -20,13 +20,13 @@ export default function HomePage() {
 
   // Loading screen
   return (
-    <div className="min-h-screen bg-secondary-50 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
       <div className="text-center">
-        <GamepadIcon className="h-16 w-16 text-primary-600 mx-auto animate-pulse" />
-        <h1 className="mt-4 text-2xl font-bold text-secondary-900">
+        <GamepadIcon className="h-16 w-16 text-blue-600 mx-auto animate-pulse" />
+        <h1 className="mt-4 text-2xl font-bold text-gray-900">
           RTP Games Dashboard
         </h1>
-        <p className="mt-2 text-secondary-600">Carregando...</p>
+        <p className="mt-2 text-gray-600">Carregando...</p>
       </div>
     </div>
   )

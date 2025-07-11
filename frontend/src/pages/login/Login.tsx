@@ -44,19 +44,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <GamepadIcon className="h-12 w-12 text-primary-600" />
+          <GamepadIcon className="h-12 w-12 text-blue-600" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-bold text-secondary-900 dark:text-secondary-100">
+        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Entre na sua conta
         </h2>
-        <p className="mt-2 text-center text-sm text-secondary-600 dark:text-secondary-400">
+        <p className="mt-2 text-center text-sm text-gray-600">
           Ou{' '}
           <Link
             to="/register"
-            className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+            className="font-medium text-blue-600 hover:text-blue-500"
           >
             crie uma nova conta
           </Link>
@@ -64,14 +64,14 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <Card className="dark:bg-secondary-800 dark:border-secondary-700">
+        <Card>
           <CardHeader>
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-secondary-100">Login</h3>
+            <h3 className="text-lg font-medium text-gray-900">Login</h3>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {error && (
-                <div className="bg-error-50 dark:bg-error-950 border border-error-200 dark:border-error-800 text-error-700 dark:text-error-200 px-4 py-3 rounded-md">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                   {error}
                 </div>
               )}
@@ -105,15 +105,15 @@ export default function LoginPage() {
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-secondary-300 dark:border-secondary-700" />
+                  <div className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-secondary-900 text-secondary-500 dark:text-secondary-400">
+                  <span className="px-2 bg-white text-gray-500">
                     Credenciais de teste
                   </span>
                 </div>
               </div>
-              <div className="mt-4 text-sm text-secondary-600 dark:text-secondary-400 bg-secondary-50 dark:bg-secondary-900 p-3 rounded-md">
+              <div className="mt-4 text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
                 <p><strong>Email:</strong> admin@rtpgames.com</p>
                 <p><strong>Senha:</strong> 123456</p>
               </div>

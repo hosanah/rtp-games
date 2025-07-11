@@ -12,7 +12,7 @@ export default function ThemeToggle() {
     <select
       value={theme}
       onChange={handleChange}
-      className="h-8 rounded-md border border-secondary-300 bg-white dark:bg-secondary-800 text-sm text-secondary-700 dark:text-secondary-200"
+      className="h-8 rounded-md border border-gray-300 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200"
     >
       <option value="light">Claro</option>
       <option value="dark">Escuro</option>
