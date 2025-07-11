@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import Button from '@/components/ui/Button'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 import { GamepadIcon, UserIcon, LogOutIcon, BarChart3Icon } from 'lucide-react'
 
 export default function Header() {
@@ -14,7 +15,7 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white shadow-sm border-b border-secondary-200">
+    <header className="bg-white/80 dark:bg-black/70 backdrop-blur-sm shadow-sm border-b border-secondary-200 dark:border-secondary-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -58,6 +59,7 @@ export default function Header() {
 
           {/* User menu */}
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             {isAuthenticated ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
