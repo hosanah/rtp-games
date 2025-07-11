@@ -55,7 +55,7 @@ export default function LoginPage() {
         <p className="mt-2 text-center text-sm text-secondary-600">
           Ou{' '}
           <Link
-            href="/register"
+            to="/register"
             className="font-medium text-primary-600 hover:text-primary-500"
           >
             crie uma nova conta

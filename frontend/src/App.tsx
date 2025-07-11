@@ -6,6 +6,7 @@ import RegisterPage from './pages/register/Register'
 import DashboardPage from './pages/dashboard/Dashboard'
 import HousesPage from './pages/houses/Houses'
 import Layout from './components/layout/Layout'
+import PrivateRoute from './components/routing/PrivateRoute'
 
 export default function App() {
   return (
@@ -16,9 +17,11 @@ export default function App() {
       <Route
         path="/dashboard"
         element={
-          <Layout>
-            <DashboardPage />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <DashboardPage />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route
