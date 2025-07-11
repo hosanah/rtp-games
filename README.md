@@ -1,6 +1,6 @@
 # RTP Games Dashboard
 
-Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com React + Vite, Node.js, Express.js, PostgreSQL e Prisma ORM.
+Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com React + Vite, Node.js, Express.js, PostgreSQL e Sequelize ORM.
 
 ## 🚀 Tecnologias
 
