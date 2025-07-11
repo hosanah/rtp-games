@@ -2,6 +2,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import sequelize from './models';
 import { BettingHouse } from './models/bettingHouse';
 import axios from 'axios';
+import { decodeRtp } from './utils/rtpProtoDecoder';
 
 interface RtpUpdate {
   houseId: number;
@@ -54,23 +55,18 @@ export class RtpSocket {
   }
 
   private parseProto(data: ArrayBuffer, houseId: number): RtpUpdate[] {
-    // Simplified parser: treat data as JSON if possible
     try {
-      const text = Buffer.from(data).toString();
-      const parsed = JSON.parse(text);
-      if (Array.isArray(parsed)) {
-        return parsed.map((g: any) => ({
-          houseId,
-          gameName: g.name,
-          provider: g.provider,
-          rtp: this.adjustRtp(g.rtp),
-          imageUrl: g.image,
-        }));
-      }
+      const games = decodeRtp(data);
+      return games.map(g => ({
+        houseId,
+        gameName: g.name,
+        provider: g.provider,
+        rtp: this.adjustRtp(g.rtp),
+        imageUrl: g.image,
+      }));
     } catch {
-      // ignore parsing errors
+      return [];
     }
-    return [];
   }
 
   private adjustRtp(value: number | string): number {
