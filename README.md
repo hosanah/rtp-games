@@ -251,7 +251,7 @@ npm run lint         # Linter
    - Confirme as credenciais no .env
 
 2. **Erro de CORS**
-   - Verifique a configuração FRONTEND_URL no backend
+   - Verifique se `FRONTEND_URL` contem todas as origens permitidas (separadas por virgula)
    - Confirme a URL da API no frontend
 
 3. **Erro de autenticação**

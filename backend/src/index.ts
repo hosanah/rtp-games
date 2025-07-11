@@ -25,11 +25,25 @@ db.authenticate().then(() => {
 // Middleware de segurança
 app.use(helmet());
 
-// Configurar CORS
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+// Configurar CORS com suporte a multiplas origens
+const allowedOriginsEnv = process.env.FRONTEND_URL || 'http://localhost:3000';
+const allowedOrigins = allowedOriginsEnv
+  .split(',')
+  .map((url) => url.trim().replace(/\/$/, ''));
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const clean = origin.replace(/\/$/, '');
+      if (allowedOrigins.includes(clean)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  }),
+);
 
 // Middleware para parsing JSON
 app.use(express.json({ limit: '10mb' }));
