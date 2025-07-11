@@ -15,6 +15,7 @@
 ### Histórico de Alterações
 
 - 2025-07-11: Ajustado link de navegação para "/houses" no Header do frontend para usar `to` em vez de `href`.
+- 2025-07-12: Adicionada opção de tema "Floresta" com paleta personalizada.
 
 ## Estrutura de Banco de Dados
 
