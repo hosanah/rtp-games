@@ -7,4 +7,5 @@
 - Atualizar dependências, corrigir bugs e implementar melhorias conforme solicitado.
 - Gerenciar e manter consistência entre frontend React e backend Node.
 - Executar testes e lint sempre que possível antes de finalizar mudanças.
+- Novas criações devem seguir o padrão de tema com provedor `useTheme` e `ThemeToggle`.
 
