@@ -7,4 +7,7 @@
 - Atualizar dependências, corrigir bugs e implementar melhorias conforme solicitado.
 - Gerenciar e manter consistência entre frontend React e backend Node.
 - Executar testes e lint sempre que possível antes de finalizar mudanças.
+- Evitar duplicar componentes de layout; as páginas que já são embrulhadas pelo
+  `Layout` nas rotas não devem importá-lo novamente. Isso previne headers
+  duplicados.
 

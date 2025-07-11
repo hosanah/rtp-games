@@ -86,8 +86,7 @@ export default function HousesPage() {
   }
 
   return (
-    <Layout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <Card>
           <CardHeader>
             <h3 className="text-lg font-medium text-secondary-900">
@@ -163,7 +162,6 @@ export default function HousesPage() {
           </CardContent>
         </Card>
       </div>
-    </Layout>
-  )
+    )
 }
 
