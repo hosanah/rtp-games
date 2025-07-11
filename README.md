@@ -1,6 +1,6 @@
 # RTP Games Dashboard
 
-Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com React + Vite, Node.js, Express.js, PostgreSQL e Prisma ORM.
+Uma aplicação completa para monitoramento e análise de RTP (Return to Player) de jogos de cassino, desenvolvida com React + Vite, Node.js, Express.js, PostgreSQL e Sequelize ORM.
 
 ## 🚀 Tecnologias
 
@@ -50,6 +50,7 @@ Uma aplicação completa para monitoramento e análise de RTP (Return to Player)
 - ✅ Histórico pessoal
 - ✅ Estatísticas detalhadas
 - ✅ Análise por jogo
+- ✅ Atualização em tempo real via WebSocket (novas casas são detectadas automaticamente)
 
 ## 🛠️ Instalação e Configuração
 
@@ -98,6 +99,7 @@ cd frontend
 npm install
 cp .env.local.example .env.local
 # Configure as variáveis no .env.local (VITE_API_URL e VITE_WS_URL)
+# Use URLs HTTPS para evitar Mixed Content
 npm run dev
 ```
 

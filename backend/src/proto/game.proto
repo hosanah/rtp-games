@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message GameRtp {
+  string name = 1;
+  string provider = 2;
+  int64 rtp = 3;
+  string image = 4;
+}
+
+message GameRtpList {
+  repeated GameRtp games = 1;
+}

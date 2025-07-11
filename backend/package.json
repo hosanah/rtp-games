@@ -9,7 +9,9 @@
     "dev": "nodemon src/index.ts",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
-    "test": "ts-node tests/bettingHouseController.test.ts"
+    "test": "ts-node tests/bettingHouseController.test.ts",
+    "seed": "sequelize db:seed:all"
+    ,"test": "jest"
   },
   "keywords": [
     "express",
@@ -32,16 +34,20 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.1",
-    "ws": "^8.18.3"
+    "ws": "^8.18.3",
+    "protobufjs": "^7.5.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.10.2",
+    "jest": "^30.0.4",
     "nodemon": "^3.1.7",
     "sequelize-cli": "^6.6.1",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
