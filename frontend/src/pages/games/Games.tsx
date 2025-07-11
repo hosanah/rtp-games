@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/Card'
+import GameCard from '@/components/games/GameCard'
 import { gamesApi, housesApi } from '@/lib/api'
 import { useRtpSocket } from '@/hooks/useRtpSocket'
 import { Game, BettingHouse, HouseGame } from '@/types'
@@ -58,54 +59,16 @@ export default function GamesPage() {
           <h3 className="text-lg font-medium text-gray-900">Jogos</h3>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 text-left">Jogo</th>
-                  <th className="px-4 py-2 text-left">Provedor</th>
-                  <th className="px-4 py-2 text-left">Categoria</th>
-                  <th className="px-4 py-2 text-left">RTP Min</th>
-                  <th className="px-4 py-2 text-left">RTP Máx</th>
-                  <th className="px-4 py-2 text-left">RTP Atual</th>
-                  {houses.map((h) => (
-                    <th key={h.id} className="px-4 py-2 text-left">
-                      {h.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {games.map((game) => (
-                  <tr key={game.id}>
-                    <td className="px-4 py-2">
-                      <div className="flex items-center space-x-2">
-                        {game.imageUrl && (
-                          <img
-                            src={game.imageUrl}
-                            alt={game.name}
-                            className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded"
-                          />
-                        )}
-                        <span>{game.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2">{game.provider}</td>
-                    <td className="px-4 py-2">{game.category}</td>
-                    <td className="px-4 py-2">{game.minRtp.toFixed(2)}%</td>
-                    <td className="px-4 py-2">{game.maxRtp.toFixed(2)}%</td>
-                    <td className={"px-4 py-2 " + rtpClass(getRtp(game, 0))}>
-                      {getRtp(game, 0).toFixed(2)}%
-                    </td>
-                    {houses.map((h) => (
-                      <td key={h.id} className={"px-4 py-2 " + rtpClass(getRtp(game, h.id))}>
-                        {getRtp(game, h.id).toFixed(2)}%
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+            {games.map((game) => (
+              <GameCard
+                key={game.id}
+                game={game}
+                houses={houses}
+                getRtp={getRtp}
+                rtpClass={rtpClass}
+              />
+            ))}
           </div>
         </CardContent>
       </Card>
