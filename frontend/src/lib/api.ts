@@ -122,6 +122,7 @@ export const housesApi = {
     apiName: string
     apiUrl: string
     updateInterval: number
+    updateIntervalUnit: 'seconds' | 'minutes'
     currency: string
   }) => api.post('/houses', data),
 
@@ -136,6 +137,7 @@ export const housesApi = {
       apiName: string
       apiUrl: string
       updateInterval: number
+      updateIntervalUnit: 'seconds' | 'minutes'
       currency: string
     }
   ) => api.put(`/houses/${id}`, data),
