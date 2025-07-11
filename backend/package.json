@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "migrate": "sequelize db:migrate",
-    "seed": "sequelize db:seed:all"
+    "seed": "sequelize db:seed:all",
+    "test": "ts-node tests/bettingHouseController.test.ts"
   },
   "keywords": [
     "express",
