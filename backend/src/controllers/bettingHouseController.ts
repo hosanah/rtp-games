@@ -5,10 +5,18 @@ export const createBettingHouse = async (req: Request, res: Response): Promise<v
   try {
     const { name, apiName, apiUrl, updateInterval, updateIntervalUnit, currency } = req.body;
 
-    if (!name || !apiName || !apiUrl || !updateInterval || !updateIntervalUnit || !currency) {
+    if (!name || !apiName || !apiUrl || updateInterval == null || !updateIntervalUnit || !currency) {
       res.status(400).json({
         error: 'Todos os campos são obrigatórios',
         code: 'MISSING_FIELDS'
+      });
+      return;
+    }
+
+    if (typeof updateInterval !== 'number' || updateInterval <= 0) {
+      res.status(400).json({
+        error: 'Intervalo de atualização deve ser maior que zero',
+        code: 'INVALID_UPDATE_INTERVAL'
       });
       return;
     }
@@ -82,6 +90,23 @@ export const updateBettingHouse = async (req: Request, res: Response): Promise<v
     }
 
     const { name, apiName, apiUrl, updateInterval, updateIntervalUnit, currency } = req.body;
+
+    if (!name || !apiName || !apiUrl || updateInterval == null || !updateIntervalUnit || !currency) {
+      res.status(400).json({
+        error: 'Todos os campos são obrigatórios',
+        code: 'MISSING_FIELDS'
+      });
+      return;
+    }
+
+    if (typeof updateInterval !== 'number' || updateInterval <= 0) {
+      res.status(400).json({
+        error: 'Intervalo de atualização deve ser maior que zero',
+        code: 'INVALID_UPDATE_INTERVAL'
+      });
+      return;
+    }
+
     await house.update({ name, apiName, apiUrl, updateInterval, updateIntervalUnit, currency });
     res.json(house);
   } catch (error) {
