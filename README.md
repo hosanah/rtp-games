@@ -97,7 +97,7 @@ npm run dev
 cd frontend
 npm install
 cp .env.local.example .env.local
-# Configure as variáveis no .env.local
+# Configure as variáveis no .env.local (VITE_API_URL e VITE_WS_URL)
 npm run dev
 ```
 

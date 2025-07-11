@@ -19,7 +19,9 @@ export function useRtpSocket() {
   const [updates, setUpdates] = useState<RtpUpdate[]>([])
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:3001/ws')
+    const wsUrl =
+      (import.meta as any).env.VITE_WS_URL || 'ws://localhost:3001/ws'
+    const ws = new WebSocket(wsUrl)
 
     ws.onmessage = (event) => {
       try {
@@ -29,7 +31,13 @@ export function useRtpSocket() {
             ...u,
             rtp: adjustRtp(u.rtp),
           }))
-          setUpdates(adjusted)
+          setUpdates((prev) => {
+            const map = new Map(prev.map((u) => [`${u.houseId}:${u.gameName}`, u]))
+            adjusted.forEach((u) => {
+              map.set(`${u.houseId}:${u.gameName}`, u)
+            })
+            return Array.from(map.values())
+          })
         }
       } catch {
         // ignore

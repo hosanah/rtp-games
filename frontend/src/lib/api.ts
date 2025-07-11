@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 // Configuração base da API
-const API_BASE_URL = 'https://rtp-api.zapchatbr.com/api'
-//const API_BASE_URL = 'http://localhost:3001/api'
+const API_BASE_URL =
+  (import.meta as any).env.VITE_API_URL || 'http://localhost:3001/api'
 
 // Criar instância do axios
 export const api = axios.create({
