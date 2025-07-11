@@ -1,5 +1,4 @@
 import React from 'react'
-import Layout from '@/components/layout/Layout'
 import { Card, CardHeader, CardContent } from '@/components/ui/Card'
 import { useAuth } from '@/hooks/useAuth'
 import { GamepadIcon, TrendingUpIcon, BarChart3Icon, ClockIcon } from 'lucide-react'
@@ -8,8 +7,7 @@ export default function DashboardPage() {
   const { user } = useAuth()
 
   return (
-    <Layout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg p-6 text-white">
           <h1 className="text-2xl font-bold">
@@ -162,7 +160,6 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
-    </Layout>
-  )
-}
+    )
+  }
 
