@@ -45,18 +45,18 @@ export function formatDateOnly(date: string | Date): string {
  * Calcula a cor baseada no valor RTP
  */
 export function getRtpColor(rtp: number): string {
-  if (rtp >= 96) return 'text-success-600'
-  if (rtp >= 94) return 'text-warning-600'
-  return 'text-error-600'
+  if (rtp >= 96) return 'text-green-600'
+  if (rtp >= 94) return 'text-yellow-600'
+  return 'text-red-600'
 }
 
 /**
  * Calcula a cor de fundo baseada no valor RTP
  */
 export function getRtpBgColor(rtp: number): string {
-  if (rtp >= 96) return 'bg-success-100 text-success-800'
-  if (rtp >= 94) return 'bg-warning-100 text-warning-800'
-  return 'bg-error-100 text-error-800'
+  if (rtp >= 96) return 'bg-green-100 text-green-800'
+  if (rtp >= 94) return 'bg-yellow-100 text-yellow-800'
+  return 'bg-red-100 text-red-800'
 }
 
 /**

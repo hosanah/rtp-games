@@ -15,13 +15,13 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white/80 dark:bg-black/70 backdrop-blur-sm shadow-sm border-b border-secondary-200 dark:border-secondary-800">
+    <header className="bg-white/80 dark:bg-black/70 backdrop-blur-sm shadow-sm border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <GamepadIcon className="h-8 w-8 text-primary-600" />
-            <span className="text-xl font-bold text-secondary-900">
+            <GamepadIcon className="h-8 w-8 text-blue-600" />
+            <span className="text-xl font-bold text-gray-900">
               RTP Games Dashboard
             </span>
           </Link>
@@ -31,25 +31,25 @@ export default function Header() {
             <nav className="hidden md:flex space-x-8">
               <Link
                 to="/dashboard"
-                className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Dashboard
               </Link>
               <Link
                 to="/games"
-                className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Jogos
               </Link>
               <Link
                 to="/houses"
-                className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Casas
               </Link>
               <Link
                 to="/stats"
-                className="text-secondary-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <BarChart3Icon className="h-4 w-4 inline mr-1" />
                 Estatísticas
@@ -63,8 +63,8 @@ export default function Header() {
             {isAuthenticated ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
-                  <UserIcon className="h-5 w-5 text-secondary-500" />
-                  <span className="text-sm font-medium text-secondary-700">
+                  <UserIcon className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">
                     {user?.name}
                   </span>
                 </div>
@@ -72,7 +72,7 @@ export default function Header() {
                   variant="ghost"
                   size="sm"
                   onClick={handleLogout}
-                  className="text-secondary-600 hover:text-error-600"
+                  className="text-gray-600 hover:text-red-600"
                 >
                   <LogOutIcon className="h-4 w-4 mr-1" />
                   Sair
