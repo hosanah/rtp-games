@@ -20,7 +20,7 @@ export function useRtpSocket() {
 
   useEffect(() => {
     const wsUrl =
-      (import.meta as any).env.VITE_WS_URL || 'ws://localhost:3001/ws'
+      (import.meta as any).env.VITE_WS_URL || 'wss://rtp-api.zapchatbr.com/ws'
     const ws = new WebSocket(wsUrl)
 
     ws.onmessage = (event) => {
