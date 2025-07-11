@@ -83,9 +83,11 @@ export const gamesApi = {
   
   getProviders: () =>
     api.get('/games/providers'),
-  
+
   getStats: () =>
     api.get('/games/stats'),
+
+  getHouseGames: (id: number) => api.get(`/games/house/${id}`),
 }
 
 // Funções de RTP
