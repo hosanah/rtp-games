@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
 import { Game, BettingHouse } from '@/types'
 
 interface GameCardProps {
@@ -7,12 +8,13 @@ interface GameCardProps {
   houses: BettingHouse[]
   getRtp: (game: Game, houseId: number) => number
   rtpClass: (value: number) => string
+  className?: string
 }
 
-export default function GameCard({ game, houses, getRtp, rtpClass }: GameCardProps) {
+export default function GameCard({ game, houses, getRtp, rtpClass, className }: GameCardProps) {
   const image = `https://cgg.bet.br/static/v1/casino/game/0/${game.id}/big.webp`
   return (
-    <Card className="overflow-hidden">
+    <Card className={cn('overflow-hidden', className)}>
       <img
         src={image}
         alt={game.name}
