@@ -12,15 +12,19 @@ export default function GamesPage() {
   const updates = useRtpSocket()
 
   useEffect(() => {
-    gamesApi
-      .getAll()
-      .then((res) => setGames(res.data))
-      .catch(() => {})
     housesApi
       .getAll()
       .then((res) => setHouses(res.data))
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (houses.length === 0) return
+    gamesApi
+      .getAll()
+      .then((res) => setGames(res.data))
+      .catch(() => {})
+  }, [houses])
 
   useEffect(() => {
     const intervals: number[] = []
