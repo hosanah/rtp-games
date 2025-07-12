@@ -59,17 +59,19 @@ export default function GamesPage() {
           <h3 className="text-lg font-medium text-gray-900">Jogos</h3>
         </CardHeader>
         <CardContent>
-          <div className="flex overflow-x-auto space-x-4 pb-2">
-            {games.map((game) => (
-              <GameCard
-                key={game.id}
-                game={game}
-                houses={houses}
-                getRtp={getRtp}
-                rtpClass={rtpClass}
-                className="flex-shrink-0 w-60"
-              />
-            ))}
+          <div className="overflow-x-auto">
+            <div className="flex flex-nowrap space-x-4 pb-2">
+              {games.map((game) => (
+                <GameCard
+                  key={game.id}
+                  game={game}
+                  houses={houses}
+                  getRtp={getRtp}
+                  rtpClass={rtpClass}
+                  className="w-60 flex-shrink-0"
+                />
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
