@@ -80,8 +80,8 @@ export default function GamesPage() {
           <h3 className="text-lg font-medium text-gray-900">Jogos</h3>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto pb-2">
-            <div className="flex w-max space-x-4">
+          <div className="pb-2">
+            <div className="flex flex-col gap-4">
               {games.map((game) => (
                 <GameCard
                   key={game.id}
