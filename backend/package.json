@@ -9,8 +9,6 @@
     "dev": "nodemon src/index.ts",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
-    "test": "ts-node tests/bettingHouseController.test.ts",
-    "seed": "sequelize db:seed:all",
     "test": "jest"
   },
   "keywords": [
