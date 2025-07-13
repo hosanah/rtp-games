@@ -11,7 +11,9 @@ export interface RtpUpdate {
   houseId: number
   gameName: string
   provider: string
-  rtp: number
+  rtpDaily?: number
+  rtpWeekly?: number
+  rtpMonthly?: number
   imageUrl?: string
 }
 
@@ -29,7 +31,9 @@ export function useRtpSocket() {
         if (payload.type === 'rtp') {
           const adjusted = (payload.data as RtpUpdate[]).map((u) => ({
             ...u,
-            rtp: adjustRtp(u.rtp),
+            rtpDaily: u.rtpDaily !== undefined ? adjustRtp(u.rtpDaily) : undefined,
+            rtpWeekly: u.rtpWeekly !== undefined ? adjustRtp(u.rtpWeekly) : undefined,
+            rtpMonthly: u.rtpMonthly !== undefined ? adjustRtp(u.rtpMonthly) : undefined,
           }))
           setUpdates((prev) => {
             const map = new Map(prev.map((u) => [`${u.houseId}:${u.gameName}`, u]))

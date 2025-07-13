@@ -77,10 +77,18 @@ export default function GamesPage() {
 
 
   // Retorna o RTP do jogo mais atualizado
-  const getRtp = (game: Game, houseId: number): number => {
+  const getRtp = (
+    game: Game,
+    houseId: number,
+    period: 'daily' | 'weekly' | 'monthly'
+  ): number => {
     const up = updates.find((u) => u.gameName === game.name && u.houseId === houseId)
     const base = applySignedInt(game.rtpDecimal ?? 0, game.signedInt)
-    const rawRtp = up?.rtp ?? base
+    let raw: number | undefined
+    if (period === 'daily') raw = up?.rtpDaily
+    else if (period === 'weekly') raw = up?.rtpWeekly
+    else raw = up?.rtpMonthly
+    const rawRtp = raw ?? base
     return rawRtp / 100
   }
 
@@ -164,7 +172,7 @@ export default function GamesPage() {
 
         if (rtpFilter !== 'all') {
           filteredGames = filteredGames.filter((g) => {
-            const rtp = getRtp(g, house.id)
+            const rtp = getRtp(g, house.id, 'daily')
             return rtpFilter === 'positive' ? rtp >= 0 : rtp < 0
           })
         }

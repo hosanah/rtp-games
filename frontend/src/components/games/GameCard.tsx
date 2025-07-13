@@ -7,7 +7,7 @@ import { ArrowUpIcon, ArrowDownIcon } from 'lucide-react'
 interface GameCardProps {
   game: Game
   house: BettingHouse
-  getRtp: (game: Game, houseId: number) => number
+  getRtp: (game: Game, houseId: number, period: 'daily' | 'weekly' | 'monthly') => number
   rtpClass: (value: number) => string
   className?: string
 }
@@ -33,9 +33,9 @@ export default function GameCard({ game, house, getRtp, rtpClass, className }: G
         <p className="text-xs text-gray-500">
           {game.provider} 
         </p>
-        <p className={`text-sm ${rtpClass(getRtp(game, house.id))}`}>
-          RTP {getRtp(game, house.id).toFixed(2)}%
-        </p>
+        <p className={`text-sm ${rtpClass(getRtp(game, house.id, 'daily'))}`}>Dia {getRtp(game, house.id, 'daily').toFixed(2)}%</p>
+        <p className={`text-sm ${rtpClass(getRtp(game, house.id, 'weekly'))}`}>Semana {getRtp(game, house.id, 'weekly').toFixed(2)}%</p>
+        <p className={`text-sm ${rtpClass(getRtp(game, house.id, 'monthly'))}`}>Mês {getRtp(game, house.id, 'monthly').toFixed(2)}%</p>
         <div className="flex items-center text-xs">
           {positive ? (
             <ArrowUpIcon className="h-3 w-3 text-green-600 mr-1" />
