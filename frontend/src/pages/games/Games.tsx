@@ -3,13 +3,21 @@ import { Card, CardHeader, CardContent } from '@/components/ui/Card'
 import GameCard from '@/components/games/GameCard'
 import { gamesApi, housesApi } from '@/lib/api'
 import { useRtpSocket } from '@/hooks/useRtpSocket'
-import { Game, BettingHouse, HouseGame } from '@/types'
+import { Game, BettingHouse } from '@/types'
+import Input from '@/components/ui/Input'
+import Button from '@/components/ui/Button'
 
 export default function GamesPage() {
   const [games, setGames] = useState<Game[]>([])
   const [houses, setHouses] = useState<BettingHouse[]>([])
   const [houseGames, setHouseGames] = useState<Record<number, Game[]>>({})
   const updates = useRtpSocket()
+  const [search, setSearch] = useState('')
+  const [providerFilter, setProviderFilter] = useState('')
+  const [rtpFilter, setRtpFilter] = useState<'all' | 'positive' | 'negative'>(
+    'all'
+  )
+  const [providers, setProviders] = useState<string[]>([])
 
   useEffect(() => {
     housesApi
@@ -48,7 +56,7 @@ export default function GamesPage() {
     }
   }, [houses])
 
-    useEffect(() => {
+  useEffect(() => {
     const allGamesMap = new Map<string, Game>()
 
     Object.values(houseGames).forEach((gamesArray) => {
@@ -62,6 +70,11 @@ export default function GamesPage() {
     setGames(Array.from(allGamesMap.values()))
   }, [houseGames])
 
+  useEffect(() => {
+    const provs = Array.from(new Set(games.map((g) => g.provider))).sort()
+    setProviders(provs)
+  }, [games])
+
 
   // Retorna o RTP do jogo mais atualizado
   const getRtp = (game: Game, houseId: number): number => {
@@ -74,16 +87,80 @@ export default function GamesPage() {
   const rtpClass = (value: number) => (value >= 0 ? 'text-green-600' : 'text-red-600')
 
   return (
-  <div className="space-y-6">
-    {houses.map((house) => {
-      const games = houseGames[house.id] ?? []
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="w-full sm:w-48">
+          <Input
+            placeholder="Buscar por nome"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="w-full sm:w-40">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Provedor
+          </label>
+          <select
+            className="h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            value={providerFilter}
+            onChange={(e) => setProviderFilter(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {providers.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex space-x-2">
+          <Button
+            size="sm"
+            variant={rtpFilter === 'all' ? 'primary' : 'outline'}
+            onClick={() => setRtpFilter('all')}
+          >
+            Todos
+          </Button>
+          <Button
+            size="sm"
+            variant={rtpFilter === 'positive' ? 'primary' : 'outline'}
+            onClick={() => setRtpFilter('positive')}
+          >
+            RTP +
+          </Button>
+          <Button
+            size="sm"
+            variant={rtpFilter === 'negative' ? 'primary' : 'outline'}
+            onClick={() => setRtpFilter('negative')}
+          >
+            RTP -
+          </Button>
+        </div>
+      </div>
+      {houses.map((house) => {
+        let games = houseGames[house.id] ?? []
 
-      return (
-        <Card key={house.id}>
-          <CardHeader>
-            <h3 className="text-lg font-medium text-gray-900">Jogos - {house.name}</h3>
-          </CardHeader>
-          <CardContent>
+        if (search) {
+          games = games.filter((g) =>
+            g.name.toLowerCase().includes(search.toLowerCase())
+          )
+        }
+        if (providerFilter) {
+          games = games.filter((g) => g.provider === providerFilter)
+        }
+        if (rtpFilter !== 'all') {
+          games = games.filter((g) => {
+            const rtp = getRtp(g, house.id)
+            return rtpFilter === 'positive' ? rtp >= 0 : rtp < 0
+          })
+        }
+
+        return (
+          <Card key={house.id}>
+            <CardHeader>
+              <h3 className="text-lg font-medium text-gray-900">Jogos - {house.name}</h3>
+            </CardHeader>
+            <CardContent>
             {games.length === 0 ? (
               <p className="text-sm text-gray-500">Nenhum jogo disponível</p>
             ) : (
