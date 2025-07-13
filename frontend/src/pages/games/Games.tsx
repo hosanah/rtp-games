@@ -14,10 +14,9 @@ export default function GamesPage() {
   const updates = useRtpSocket()
   const [search, setSearch] = useState('')
   const [providerFilter, setProviderFilter] = useState('')
-  const [rtpFilter, setRtpFilter] = useState<'all' | 'positive' | 'negative'>(
-    'all'
-  )
+  const [rtpFilter, setRtpFilter] = useState<'all' | 'positive' | 'negative'>('all')
   const [providers, setProviders] = useState<string[]>([])
+  const [expanded, setExpanded] = useState<Record<number, boolean>>({})
 
   useEffect(() => {
     housesApi
@@ -81,6 +80,10 @@ export default function GamesPage() {
     const up = updates.find((u) => u.gameName === game.name && u.houseId === houseId)
     const rawRtp = up?.rtp ?? game.rtpDecimal ?? 0
     return rawRtp / 100
+  }
+
+  const toggleExpanded = (houseId: number) => {
+    setExpanded((prev) => ({ ...prev, [houseId]: !prev[houseId] }))
   }
 
 
@@ -176,11 +179,46 @@ export default function GamesPage() {
                   />
                 ))}
               </div>
+      {houses.map((house) => {
+        const games = houseGames[house.id] ?? []
+        const isExpanded = expanded[house.id]
+
+        return (
+          <Card key={house.id}>
+            <CardHeader className="flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">
+                Jogos - {house.name}
+              </h3>
+              <button
+                onClick={() => toggleExpanded(house.id)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                {isExpanded ? 'Recolher' : 'Expandir'}
+              </button>
+            </CardHeader>
+            {isExpanded && (
+              <CardContent>
+                {games.length === 0 ? (
+                  <p className="text-sm text-gray-500">Nenhum jogo disponível</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {games.map((game) => (
+                      <GameCard
+                        key={`${house.id}-${game.id}`}
+                        game={game}
+                        house={house}
+                        getRtp={getRtp}
+                        rtpClass={rtpClass}
+                        className="h-full"
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
             )}
-          </CardContent>
-        </Card>
-      )
-    })}
-  </div>
+          </Card>
+        )
+      })}
+    </div>
   )
 }

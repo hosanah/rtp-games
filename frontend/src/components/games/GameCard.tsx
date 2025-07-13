@@ -15,7 +15,11 @@ export default function GameCard({ game, house, getRtp, rtpClass, className }: G
   const domain = house.name.toLowerCase().includes('cbet') ? 'cbet.gg' : 'cgg.bet.br'
   const image = `https://${domain}/static/v1/casino/game/0/${game.id}/big.webp`
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card onClick={() => {
+    navigator.clipboard.writeText(game.name)
+    }}
+    className={cn('overflow-hidden', className)}
+    >
       <img
         src={image}
         alt={game.name}
