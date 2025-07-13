@@ -81,7 +81,7 @@ export default function GamesPage() {
         </CardHeader>
         <CardContent>
           <div className="pb-2">
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {games.map((game) => (
                 <GameCard
                   key={game.id}
@@ -89,7 +89,7 @@ export default function GamesPage() {
                   houses={houses}
                   getRtp={getRtp}
                   rtpClass={rtpClass}
-                  className="w-60 shrink-0"
+                  className="h-full"
                 />
               ))}
             </div>
