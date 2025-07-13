@@ -62,9 +62,9 @@ export class RtpSocket {
 
   private async fetchAndBroadcast(house: BettingHouse) {
     try {
+      const baseTimeout = Number(process.env.RTP_API_TIMEOUT_MS || 10000);
       const common: AxiosRequestConfig = {
         responseType: 'arraybuffer',
-        timeout: Number(process.env.RTP_API_TIMEOUT_MS || 10000),
         family: 4 as 4,
         headers: {
           'Content-Type': 'application/x-protobuf',
@@ -75,9 +75,21 @@ export class RtpSocket {
       };
 
       const [daily, weekly, monthly] = await Promise.all([
-        axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 1, 16, 2]), common),
-        axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 2, 16, 2]), common),
-        axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 3, 16, 3]), common),
+        axios.post<ArrayBuffer>(
+          house.apiUrl,
+          Buffer.from([8, 1, 16, 2]),
+          { ...common, timeout: baseTimeout }
+        ),
+        axios.post<ArrayBuffer>(
+          house.apiUrl,
+          Buffer.from([8, 2, 16, 2]),
+          { ...common, timeout: baseTimeout * 7 }
+        ),
+        axios.post<ArrayBuffer>(
+          house.apiUrl,
+          Buffer.from([8, 3, 16, 3]),
+          { ...common, timeout: baseTimeout * 10 }
+        ),
       ]);
 
       const updates = this.mergeRtps(daily.data, weekly.data, monthly.data, house.id);
