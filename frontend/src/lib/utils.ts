@@ -60,6 +60,22 @@ export function getRtpBgColor(rtp: number): string {
 }
 
 /**
+ * Ajusta o sinal do valor RTP recebido via rtpDecimal de acordo com signedInt
+ */
+export function applySignedInt(rtpDecimal: number, signedInt?: string | number): number {
+  if (signedInt === undefined) return rtpDecimal
+  try {
+    const val = BigInt(signedInt)
+    const maxPositive = BigInt('9223372036854775807')
+    const max = BigInt('18446744073709551616')
+    const signed = val > maxPositive ? val - max : val
+    return signed < 0n ? -rtpDecimal : rtpDecimal
+  } catch {
+    return rtpDecimal
+  }
+}
+
+/**
  * Debounce function para otimizar pesquisas
  */
 export function debounce<T extends (...args: unknown[]) => unknown>(

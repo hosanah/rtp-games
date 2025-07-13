@@ -4,6 +4,7 @@ import GameCard from '@/components/games/GameCard'
 import { gamesApi, housesApi } from '@/lib/api'
 import { useRtpSocket } from '@/hooks/useRtpSocket'
 import { Game, BettingHouse } from '@/types'
+import { applySignedInt } from '@/lib/utils'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
@@ -78,7 +79,8 @@ export default function GamesPage() {
   // Retorna o RTP do jogo mais atualizado
   const getRtp = (game: Game, houseId: number): number => {
     const up = updates.find((u) => u.gameName === game.name && u.houseId === houseId)
-    const rawRtp = up?.rtp ?? game.rtpDecimal ?? 0
+    const base = applySignedInt(game.rtpDecimal ?? 0, game.signedInt)
+    const rawRtp = up?.rtp ?? base
     return rawRtp / 100
   }
 
