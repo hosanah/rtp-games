@@ -5,14 +5,15 @@ import { Game, BettingHouse } from '@/types'
 
 interface GameCardProps {
   game: Game
-  houses: BettingHouse[]
+  house: BettingHouse
   getRtp: (game: Game, houseId: number) => number
   rtpClass: (value: number) => string
   className?: string
 }
 
-export default function GameCard({ game, houses, getRtp, rtpClass, className }: GameCardProps) {
-  const image = `https://cgg.bet.br/static/v1/casino/game/0/${game.id}/big.webp`
+export default function GameCard({ game, house, getRtp, rtpClass, className }: GameCardProps) {
+  const domain = house.name.toLowerCase().includes('cbet') ? 'cbet.gg' : 'cgg.bet.br'
+  const image = `https://${domain}/static/v1/casino/game/0/${game.id}/big.webp`
   return (
     <Card className={cn('overflow-hidden', className)}>
       <img

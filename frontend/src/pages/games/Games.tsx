@@ -92,7 +92,7 @@ export default function GamesPage() {
                   <GameCard
                     key={`${house.id}-${game.id}`}
                     game={game}
-                    houses={[house]} // passa só a casa atual
+                    house={house}
                     getRtp={getRtp}
                     rtpClass={rtpClass}
                     className="h-full"
