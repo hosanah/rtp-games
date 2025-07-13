@@ -28,20 +28,10 @@ export interface RegisterRequest {
 export interface Game {
   id: number
   name: string
+  image: string
   provider: string
-  category: string
-  minRtp: number
-  maxRtp: number
-  currentRtp: number
-  imageUrl?: string
-  description?: string
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-  _count?: {
-    rtpHistory: number
-  }
-  rtpHistory?: RtpRecord[]
+  rtpDecimal: number
+  signedInt: number
 }
 
 export interface GameStats {

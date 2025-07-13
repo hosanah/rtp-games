@@ -25,16 +25,11 @@ export default function GameCard({ game, houses, getRtp, rtpClass, className }: 
           {game.name}
         </h4>
         <p className="text-xs text-gray-500">
-          {game.provider} - {game.category}
+          {game.provider} 
         </p>
         <p className={`text-sm ${rtpClass(getRtp(game, 0))}`}>
           RTP {getRtp(game, 0).toFixed(2)}%
         </p>
-        {houses.map((h) => (
-          <p key={h.id} className={`text-xs ${rtpClass(getRtp(game, h.id))}`}> 
-            {h.name}: {getRtp(game, h.id).toFixed(2)}%
-          </p>
-        ))}
       </div>
     </Card>
   )

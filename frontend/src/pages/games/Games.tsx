@@ -8,7 +8,7 @@ import { Game, BettingHouse, HouseGame } from '@/types'
 export default function GamesPage() {
   const [games, setGames] = useState<Game[]>([])
   const [houses, setHouses] = useState<BettingHouse[]>([])
-  const [houseGames, setHouseGames] = useState<Record<number, HouseGame[]>>({})
+  const [houseGames, setHouseGames] = useState<Record<number, Game[]>>({})
   const updates = useRtpSocket()
 
   useEffect(() => {
@@ -19,40 +19,57 @@ export default function GamesPage() {
   }, [])
 
   useEffect(() => {
-    if (houses.length === 0) return
-    gamesApi
-      .getAll()
-      .then((res) => setGames(res.data))
-      .catch(() => {})
-  }, [houses])
-
-  useEffect(() => {
     const intervals: number[] = []
+
     houses.forEach((house) => {
       const fetchGames = () => {
         gamesApi
           .getHouseGames(house.id)
-          .then((res) =>
+          .then((res) => {
             setHouseGames((prev) => ({ ...prev, [house.id]: res.data }))
-          )
-          .catch(() => {})
+          })
+          .catch((err) => {
+            console.error(`Erro ao buscar jogos da casa ${house.name}`, err)
+          })
       }
+
       fetchGames()
+
       const ms =
         house.updateIntervalUnit === 'minutes'
           ? house.updateInterval * 60000
           : house.updateInterval * 1000
+
       intervals.push(window.setInterval(fetchGames, ms))
     })
+
     return () => {
       intervals.forEach((id) => clearInterval(id))
     }
   }, [houses])
 
-  const getRtp = (game: Game, houseId: number) => {
+    useEffect(() => {
+    const allGamesMap = new Map<string, Game>()
+
+    Object.values(houseGames).forEach((gamesArray) => {
+      gamesArray.forEach((game) => {
+        if (game?.id && !allGamesMap.has(game.id)) {
+          allGamesMap.set(game.id, game)
+        }
+      })
+    })
+
+    setGames(Array.from(allGamesMap.values()))
+  }, [houseGames])
+
+
+  // Retorna o RTP do jogo mais atualizado
+  const getRtp = (game: Game, houseId: number): number => {
     const up = updates.find((u) => u.gameName === game.name && u.houseId === houseId)
-    return up ? up.rtp : game.currentRtp
+    const rawRtp = up?.rtp ?? game.rtpDecimal ?? 0
+    return rawRtp / 100
   }
+
 
   const rtpClass = (value: number) => (value >= 0 ? 'text-green-600' : 'text-red-600')
 
@@ -79,50 +96,6 @@ export default function GamesPage() {
           </div>
         </CardContent>
       </Card>
-      {houses.map((house) => (
-        <Card key={house.id}>
-          <CardHeader>
-            <h3 className="text-lg font-medium text-gray-900">
-              Jogos - {house.name}
-            </h3>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left">ID</th>
-                    <th className="px-4 py-2 text-left">Nome</th>
-                    <th className="px-4 py-2 text-left">Provedor</th>
-                    <th className="px-4 py-2 text-left">RTP</th>
-                    <th className="px-4 py-2 text-left">Signed</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {(houseGames[house.id] || []).map((g) => (
-                    <tr key={g.id}>
-                      <td className="px-4 py-2">{g.id}</td>
-                      <td className="px-4 py-2 flex items-center space-x-2">
-                        {g.image && (
-                          <img
-                            src={g.image}
-                            alt={g.name}
-                            className="h-10 w-10 object-contain rounded"
-                          />
-                        )}
-                        <span>{g.name}</span>
-                      </td>
-                      <td className="px-4 py-2">{g.provider}</td>
-                      <td className="px-4 py-2">{(g.rtpDecimal / 100).toFixed(2)}%</td>
-                      <td className="px-4 py-2">{g.signedInt}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
     </div>
   )
 }
