@@ -10,6 +10,7 @@ export default function GamesPage() {
   const [houses, setHouses] = useState<BettingHouse[]>([])
   const [houseGames, setHouseGames] = useState<Record<number, Game[]>>({})
   const updates = useRtpSocket()
+  const [expanded, setExpanded] = useState<Record<number, boolean>>({})
 
   useEffect(() => {
     housesApi
@@ -70,40 +71,55 @@ export default function GamesPage() {
     return rawRtp / 100
   }
 
+  const toggleExpanded = (houseId: number) => {
+    setExpanded((prev) => ({ ...prev, [houseId]: !prev[houseId] }))
+  }
+
 
   const rtpClass = (value: number) => (value >= 0 ? 'text-green-600' : 'text-red-600')
 
   return (
-  <div className="space-y-6">
-    {houses.map((house) => {
-      const games = houseGames[house.id] ?? []
+    <div className="space-y-6">
+      {houses.map((house) => {
+        const games = houseGames[house.id] ?? []
+        const isExpanded = expanded[house.id]
 
-      return (
-        <Card key={house.id}>
-          <CardHeader>
-            <h3 className="text-lg font-medium text-gray-900">Jogos - {house.name}</h3>
-          </CardHeader>
-          <CardContent>
-            {games.length === 0 ? (
-              <p className="text-sm text-gray-500">Nenhum jogo disponível</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {games.map((game) => (
-                  <GameCard
-                    key={`${house.id}-${game.id}`}
-                    game={game}
-                    house={house}
-                    getRtp={getRtp}
-                    rtpClass={rtpClass}
-                    className="h-full"
-                  />
-                ))}
-              </div>
+        return (
+          <Card key={house.id}>
+            <CardHeader className="flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">
+                Jogos - {house.name}
+              </h3>
+              <button
+                onClick={() => toggleExpanded(house.id)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                {isExpanded ? 'Recolher' : 'Expandir'}
+              </button>
+            </CardHeader>
+            {isExpanded && (
+              <CardContent>
+                {games.length === 0 ? (
+                  <p className="text-sm text-gray-500">Nenhum jogo disponível</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {games.map((game) => (
+                      <GameCard
+                        key={`${house.id}-${game.id}`}
+                        game={game}
+                        house={house}
+                        getRtp={getRtp}
+                        rtpClass={rtpClass}
+                        className="h-full"
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
             )}
-          </CardContent>
-        </Card>
-      )
-    })}
-  </div>
+          </Card>
+        )
+      })}
+    </div>
   )
 }
