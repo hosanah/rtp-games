@@ -74,28 +74,36 @@ export default function GamesPage() {
   const rtpClass = (value: number) => (value >= 0 ? 'text-green-600' : 'text-red-600')
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <h3 className="text-lg font-medium text-gray-900">Jogos</h3>
-        </CardHeader>
-        <CardContent>
-          <div className="pb-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {games.map((game) => (
-                <GameCard
-                  key={game.id}
-                  game={game}
-                  houses={houses}
-                  getRtp={getRtp}
-                  rtpClass={rtpClass}
-                  className="h-full"
-                />
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+  <div className="space-y-6">
+    {houses.map((house) => {
+      const games = houseGames[house.id] ?? []
+
+      return (
+        <Card key={house.id}>
+          <CardHeader>
+            <h3 className="text-lg font-medium text-gray-900">Jogos - {house.name}</h3>
+          </CardHeader>
+          <CardContent>
+            {games.length === 0 ? (
+              <p className="text-sm text-gray-500">Nenhum jogo disponível</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {games.map((game) => (
+                  <GameCard
+                    key={`${house.id}-${game.id}`}
+                    game={game}
+                    houses={[house]} // passa só a casa atual
+                    getRtp={getRtp}
+                    rtpClass={rtpClass}
+                    className="h-full"
+                  />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )
+    })}
+  </div>
   )
 }
