@@ -59,21 +59,24 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      role: 'user'
     });
 
     // Gerar token
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      name: user.name
+      name: user.name,
+      role: user.role
     });
 
     const response: AuthResponse = {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role
       },
       token
     };
@@ -137,14 +140,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      name: user.name
+      name: user.name,
+      role: user.role
     });
 
     const response: AuthResponse = {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role
       },
       token
     };
@@ -173,7 +178,7 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
     }
 
     const user = await User.findByPk(req.user.userId, {
-      attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt']
+      attributes: ['id', 'name', 'email', 'role', 'createdAt', 'updatedAt']
     });
 
     if (!user) {
@@ -213,7 +218,8 @@ export const verifyTokenEndpoint = async (req: AuthenticatedRequest, res: Respon
       user: {
         id: req.user.userId,
         name: req.user.name,
-        email: req.user.email
+        email: req.user.email,
+        role: req.user.role
       }
     });
   } catch (error) {

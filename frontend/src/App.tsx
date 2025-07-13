@@ -6,8 +6,10 @@ import RegisterPage from './pages/register/Register'
 import DashboardPage from './pages/dashboard/Dashboard'
 import HousesPage from './pages/houses/Houses'
 import GamesPage from './pages/games/Games'
+import ThemeAdminPage from './pages/admin/ThemeAdmin'
 import Layout from './components/layout/Layout'
 import PrivateRoute from './components/routing/PrivateRoute'
+import AdminRoute from './components/routing/AdminRoute'
 
 export default function App() {
   return (
@@ -43,6 +45,16 @@ export default function App() {
               <GamesPage />
             </Layout>
           </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/theme"
+        element={
+          <AdminRoute>
+            <Layout>
+              <ThemeAdminPage />
+            </Layout>
+          </AdminRoute>
         }
       />
     </Routes>

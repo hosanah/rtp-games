@@ -3,6 +3,7 @@ export interface User {
   id: number
   name: string
   email: string
+  role: string
   createdAt: string
   updatedAt: string
 }
@@ -156,6 +157,10 @@ export interface TableColumn<T> {
   label: string
   sortable?: boolean
   render?: (item: T) => React.ReactNode
+}
+
+export interface ThemeData {
+  css: string
 }
 
 // Tipos de contexto

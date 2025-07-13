@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS "settings" (
+  "id" SERIAL PRIMARY KEY,
+  "css" TEXT NOT NULL DEFAULT ''
+);
