@@ -26,7 +26,7 @@ export interface RegisterRequest {
 
 // Tipos de jogos
 export interface Game {
-  id: number
+  id: string
   name: string
   image: string
   provider: string
