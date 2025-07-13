@@ -220,6 +220,7 @@ npm run lint         # Linter
 - `POST /api/auth/login` - Login
 - `GET /api/auth/profile` - Perfil do usuário
 - `GET /api/auth/verify` - Verificar token
+- `POST /api/auth/change-password` - Alterar senha
 
 ### Jogos
 - `GET /api/games` - Listar jogos

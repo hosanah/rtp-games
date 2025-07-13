@@ -6,6 +6,7 @@ import RegisterPage from './pages/register/Register'
 import DashboardPage from './pages/dashboard/Dashboard'
 import HousesPage from './pages/houses/Houses'
 import GamesPage from './pages/games/Games'
+import ProfilePage from './pages/profile/Profile'
 import Layout from './components/layout/Layout'
 import PrivateRoute from './components/routing/PrivateRoute'
 
@@ -41,6 +42,16 @@ export default function App() {
           <PrivateRoute>
             <Layout>
               <GamesPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <ProfilePage />
             </Layout>
           </PrivateRoute>
         }

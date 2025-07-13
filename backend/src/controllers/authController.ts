@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/user';
-import { RegisterRequest, LoginRequest, AuthResponse, AuthenticatedRequest } from '../types/auth';
+import { RegisterRequest, LoginRequest, AuthResponse, AuthenticatedRequest, ChangePasswordRequest } from '../types/auth';
 import { 
   hashPassword, 
   comparePassword, 
@@ -218,8 +218,75 @@ export const verifyTokenEndpoint = async (req: AuthenticatedRequest, res: Respon
     });
   } catch (error) {
     console.error('Erro na verificação do token:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       valid: false,
+      error: 'Erro interno do servidor',
+      code: 'INTERNAL_ERROR'
+    });
+  }
+};
+
+/**
+ * Alterar senha do usuário autenticado
+ */
+export const changePassword = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        error: 'Usuário não autenticado',
+        code: 'NOT_AUTHENTICATED'
+      });
+      return;
+    }
+
+  const { currentPassword, newPassword } = req.body as Partial<ChangePasswordRequest>;
+
+    if (!currentPassword || !newPassword) {
+      res.status(400).json({
+        error: 'Senha atual e nova senha são obrigatórias',
+        code: 'MISSING_FIELDS'
+      });
+      return;
+    }
+
+    const passwordValidation = isValidPassword(newPassword);
+    if (!passwordValidation.valid) {
+      res.status(400).json({
+        error: passwordValidation.message,
+        code: 'INVALID_PASSWORD'
+      });
+      return;
+    }
+
+    const user = await User.findByPk(req.user.userId);
+    if (!user) {
+      res.status(404).json({
+        error: 'Usuário não encontrado',
+        code: 'USER_NOT_FOUND'
+      });
+      return;
+    }
+
+    const isPasswordValid = await comparePassword(currentPassword, user.password);
+    if (!isPasswordValid) {
+      res.status(401).json({
+        error: 'Senha atual incorreta',
+        code: 'INVALID_CREDENTIALS'
+      });
+      return;
+    }
+
+    const hashed = await hashPassword(newPassword);
+    user.password = hashed;
+    await user.save();
+
+    res.json({ message: 'Senha alterada com sucesso' });
+  } catch (error) {
+    console.error('Erro ao alterar senha:', error);
+    res.status(500).json({
       error: 'Erro interno do servidor',
       code: 'INTERNAL_ERROR'
     });

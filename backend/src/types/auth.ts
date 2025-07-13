@@ -11,6 +11,11 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface JwtPayload {
   userId: number;
   email: string;

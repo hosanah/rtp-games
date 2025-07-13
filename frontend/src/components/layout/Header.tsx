@@ -62,12 +62,12 @@ export default function Header() {
             <ThemeToggle />
             {isAuthenticated ? (
               <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
+                <Link to="/profile" className="flex items-center space-x-2">
                   <UserIcon className="h-5 w-5 text-gray-500" />
                   <span className="text-sm font-medium text-gray-700">
                     {user?.name}
                   </span>
-                </div>
+                </Link>
                 <Button
                   variant="ghost"
                   size="sm"
