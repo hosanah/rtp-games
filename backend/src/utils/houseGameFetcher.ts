@@ -30,7 +30,7 @@ export async function fetchHouseGames(house: BettingHouse): Promise<DecodedHouse
     Buffer.from([8, 1, 16, 2]),
     {
       responseType: 'arraybuffer',
-      timeout: Number(process.env.RTP_API_TIMEOUT_MS || 10000),
+      timeout: Number(process.env.RTP_API_TIMEOUT_MS || 20000),
       family: 4,
       httpsAgent,
       headers: {
