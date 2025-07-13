@@ -19,7 +19,7 @@ export default function GameCard({ game, house, getRtp, rtpClass, className }: G
     className={cn('overflow-hidden', className)}
     >
       <img
-        src={game.imageUrl}
+        src={`data:image/webp;base64,${game.imageUrl}`}
         alt={game.name}
         className="w-full h-24 object-contain border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
       />
