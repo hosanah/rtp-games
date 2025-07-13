@@ -76,6 +76,22 @@ export function applySignedInt(rtpDecimal: number, signedInt?: string | number):
 }
 
 /**
+ * Converte um valor uint64 para inteiro assinado
+ */
+export function convertSignedInt(value?: string | number): number {
+  if (value === undefined) return 0
+  try {
+    const val = BigInt(value)
+    const maxPositive = BigInt('9223372036854775807')
+    const max = BigInt('18446744073709551616')
+    const signed = val > maxPositive ? val - max : val
+    return Number(signed)
+  } catch {
+    return 0
+  }
+}
+
+/**
  * Debounce function para otimizar pesquisas
  */
 export function debounce<T extends (...args: unknown[]) => unknown>(
