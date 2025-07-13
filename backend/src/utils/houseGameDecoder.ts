@@ -13,6 +13,7 @@ export interface DecodedHouseGame {
   name: string;
   provider: string;
   image?: string;
+  imageUrl?: string;
   rtpDecimal: number;
   signedInt: string;
 }

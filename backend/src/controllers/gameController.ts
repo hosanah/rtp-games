@@ -60,8 +60,26 @@ export const getHouseGames = async (req: Request, res: Response): Promise<void> 
           },
         );
         const games = decodeHouseGames(response.data);
-        houseCache.set(house.id, { timestamp: now, data: games });
-        res.json(games);
+        const gamesWithImages = await Promise.all(
+          games.map(async g => {
+            const domain = house.name.toLowerCase().includes('cbet')
+              ? 'cbet.gg'
+              : 'cgg.bet.br';
+            const url = `https://${domain}/static/v1/casino/game/0/${g.id}/big.webp`;
+            try {
+              const img = await axios.get<ArrayBuffer>(url, {
+                responseType: 'arraybuffer',
+                httpsAgent,
+              });
+              const b64 = Buffer.from(img.data).toString('base64');
+              return { ...g, imageUrl: b64 } as DecodedHouseGame;
+            } catch {
+              return { ...g } as DecodedHouseGame;
+            }
+          })
+        );
+        houseCache.set(house.id, { timestamp: now, data: gamesWithImages });
+        res.json(gamesWithImages);
       } catch (err) {
         console.error('Erro ao consultar API da casa', err);
         res.status(500).json({ error: 'Falha ao consultar API externa' });

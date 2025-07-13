@@ -68,6 +68,7 @@ export interface HouseGame {
   name: string
   provider: string
   image?: string
+  imageUrl?: string
   rtpDecimal: number
   signedInt: string
 }
