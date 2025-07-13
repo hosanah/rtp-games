@@ -42,7 +42,6 @@ export default function GamesPage() {
       }
 
       fetchGames()
-
       const ms =
         house.updateIntervalUnit === 'minutes'
           ? house.updateInterval * 60000
