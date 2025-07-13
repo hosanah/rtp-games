@@ -1,7 +1,8 @@
 import React from 'react'
 import { Card } from '@/components/ui/Card'
-import { cn } from '@/lib/utils'
+import { cn, convertSignedInt } from '@/lib/utils'
 import { Game, BettingHouse } from '@/types'
+import { ArrowUpIcon, ArrowDownIcon } from 'lucide-react'
 
 interface GameCardProps {
   game: Game
@@ -12,6 +13,8 @@ interface GameCardProps {
 }
 
 export default function GameCard({ game, house, getRtp, rtpClass, className }: GameCardProps) {
+  const signed = convertSignedInt(game.signedInt)
+  const positive = signed >= 0
   return (
     <Card onClick={() => {
     navigator.clipboard.writeText(game.name)
@@ -30,9 +33,19 @@ export default function GameCard({ game, house, getRtp, rtpClass, className }: G
         <p className="text-xs text-gray-500">
           {game.provider} 
         </p>
-        <p className={`text-sm ${rtpClass(getRtp(game, 0))}`}>
-          RTP {getRtp(game, 0).toFixed(2)}%
+        <p className={`text-sm ${rtpClass(getRtp(game, house.id))}`}>
+          RTP {getRtp(game, house.id).toFixed(2)}%
         </p>
+        <div className="flex items-center text-xs">
+          {positive ? (
+            <ArrowUpIcon className="h-3 w-3 text-green-600 mr-1" />
+          ) : (
+            <ArrowDownIcon className="h-3 w-3 text-red-600 mr-1" />
+          )}
+          <span className={positive ? 'text-green-600' : 'text-red-600'}>
+            {Math.abs(signed)}
+          </span>
+        </div>
       </div>
     </Card>
   )
