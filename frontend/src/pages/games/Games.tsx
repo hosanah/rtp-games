@@ -4,6 +4,7 @@ import GameCard from '@/components/games/GameCard'
 import { gamesApi, housesApi } from '@/lib/api'
 import { useRtpSocket } from '@/hooks/useRtpSocket'
 import { Game, BettingHouse } from '@/types'
+import { applySignedInt } from '@/lib/utils'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
@@ -76,17 +77,11 @@ export default function GamesPage() {
 
 
   // Retorna o RTP do jogo mais atualizado
-  const getRtp = (
-    game: Game,
-    houseId: number,
-    period: 'daily' | 'weekly' | 'monthly'
-  ): number => {
+  const getRtp = (game: Game, houseId: number): number => {
     const up = updates.find((u) => u.gameName === game.name && u.houseId === houseId)
-    let raw: number | undefined
-    if (period === 'daily') raw = up?.rtpDaily
-    else if (period === 'weekly') raw = up?.rtpWeekly
-    else raw = up?.rtpMonthly
-    return (raw ?? 0) / 100
+    const base = applySignedInt(game.rtpDecimal ?? 0, game.signedInt)
+    const rawRtp = up?.rtp ?? base
+    return rawRtp / 100
   }
 
   const toggleExpanded = (houseId: number) => {
@@ -169,7 +164,7 @@ export default function GamesPage() {
 
         if (rtpFilter !== 'all') {
           filteredGames = filteredGames.filter((g) => {
-            const rtp = getRtp(g, house.id, 'daily')
+            const rtp = getRtp(g, house.id)
             return rtpFilter === 'positive' ? rtp >= 0 : rtp < 0
           })
         }
