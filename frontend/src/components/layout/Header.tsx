@@ -54,6 +54,14 @@ export default function Header() {
                 <BarChart3Icon className="h-4 w-4 inline mr-1" />
                 Estatísticas
               </Link>
+              {user?.role === 'admin' && (
+                <Link
+                  to="/admin/theme"
+                  className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Tema
+                </Link>
+              )}
             </nav>
           )}
 

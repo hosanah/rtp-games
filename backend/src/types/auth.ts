@@ -15,6 +15,7 @@ export interface JwtPayload {
   userId: number;
   email: string;
   name: string;
+  role: string;
 }
 
 export interface AuthenticatedRequest extends Request {
@@ -26,6 +27,7 @@ export interface AuthResponse {
     id: number;
     name: string;
     email: string;
+    role: string;
   };
   token: string;
 }

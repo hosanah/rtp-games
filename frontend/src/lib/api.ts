@@ -147,6 +147,12 @@ export const housesApi = {
   remove: (id: number) => api.delete(`/houses/${id}`),
 }
 
+// Funções de configurações
+export const settingsApi = {
+  getTheme: () => api.get('/settings/theme'),
+  updateTheme: (data: { css: string }) => api.put('/settings/theme', data),
+}
+
 // Função para verificar se a API está online
 export const checkApiHealth = async (): Promise<boolean> => {
   try {

@@ -21,6 +21,7 @@
 - 2025-07-16: Implementado serviço WebSocket no backend para envio de RTP em tempo real e adicionada página `Games` no frontend.
 - 2025-07-17: WebSocket agora recarrega periodicamente as casas de aposta para detectar novas entradas sem duplicar intervalos.
 - 2025-07-18: Corrigido carregamento de arquivos .proto no backend; script de build agora copia a pasta `src/proto` para `dist`.
+- 2025-07-19: Adicionada página de administração de tema com salvamento de CSS personalizado no banco e verificação de papel de usuário.
 
 ## Estrutura de Banco de Dados
 

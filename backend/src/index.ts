@@ -8,6 +8,7 @@ import sequelize from './models';
 import authRoutes from './routes/auth';
 import bettingHouseRoutes from './routes/bettingHouse';
 import gameRoutes from './routes/game';
+import settingRoutes from './routes/setting';
 import initWebSocket from './websocket';
 
 
@@ -53,6 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/houses', bettingHouseRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/api/settings', settingRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {
