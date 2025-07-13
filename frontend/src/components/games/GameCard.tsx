@@ -12,8 +12,6 @@ interface GameCardProps {
 }
 
 export default function GameCard({ game, house, getRtp, rtpClass, className }: GameCardProps) {
-  const domain = house.name.toLowerCase().includes('cbet') ? 'cbet.gg' : 'cgg.bet.br'
-  const image = `https://${domain}/static/v1/casino/game/0/${game.id}/big.webp`
   return (
     <Card onClick={() => {
     navigator.clipboard.writeText(game.name)
@@ -21,7 +19,7 @@ export default function GameCard({ game, house, getRtp, rtpClass, className }: G
     className={cn('overflow-hidden', className)}
     >
       <img
-        src={image}
+        src={game.imageUrl}
         alt={game.name}
         className="w-full h-24 object-contain border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
       />

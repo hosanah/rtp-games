@@ -29,6 +29,7 @@ export interface Game {
   id: string
   name: string
   image: string
+  imageUrl: string
   provider: string
   rtpDecimal: number
   signedInt: number
