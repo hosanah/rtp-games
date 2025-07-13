@@ -228,6 +228,7 @@ npm run lint         # Linter
 - `GET /api/games/categories` - Categorias
 - `GET /api/games/providers` - Provedores
 - `GET /api/games/stats` - Estatísticas
+- `GET /api/games/house/:id` - Jogos disponíveis na casa (RTP via WebSocket)
 
 ### RTP
 - `POST /api/rtp` - Adicionar registro
