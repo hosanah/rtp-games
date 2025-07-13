@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Game } from '../models/game';
 import { BettingHouse } from '../models/bettingHouse';
 import axios from 'axios';
+import https from 'https';
 import { decodeHouseGames, DecodedHouseGame } from '../utils/houseGameDecoder';
 
 interface CacheEntry {
@@ -37,6 +38,10 @@ export const getHouseGames = async (req: Request, res: Response): Promise<void> 
         : house.updateInterval * 1000;
     const now = Date.now();
 
+    const verifySsl = (process.env.VERIFY_SSL || 'true').toLowerCase() !== 'false';
+    const httpsAgent = new https.Agent({ rejectUnauthorized: verifySsl });
+
+
     if (!cached || now - cached.timestamp > intervalMs) {
       try {
         const response = await axios.post<ArrayBuffer>(
@@ -46,12 +51,11 @@ export const getHouseGames = async (req: Request, res: Response): Promise<void> 
             responseType: 'arraybuffer',
             timeout: Number(process.env.RTP_API_TIMEOUT_MS || 10000),
             family: 4,
+            httpsAgent,
             headers: {
               accept: 'application/x-protobuf',
               'content-type': 'application/x-protobuf',
-              'x-language-iso': 'pt-BR',
-              origin: 'https://cbet.gg',
-              referer: 'https://cbet.gg/pt-BR/casinos/casino/lobby',
+              'x-language-iso': 'pt-BR'
             },
           },
         );
