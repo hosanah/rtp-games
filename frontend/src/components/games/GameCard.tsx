@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card } from '@/components/ui/Card'
 import { cn, convertSignedInt } from '@/lib/utils'
+import { useToast } from '@/hooks/useToast'
 import { Game, BettingHouse } from '@/types'
 import { ArrowUpIcon, ArrowDownIcon } from 'lucide-react'
 
@@ -15,11 +16,15 @@ interface GameCardProps {
 export default function GameCard({ game, house, getRtp, rtpClass, className }: GameCardProps) {
   const signed = convertSignedInt(game.signedInt)
   const positive = signed >= 0
-  return (
-    <Card onClick={() => {
+  const { show } = useToast()
+  const handleClick = () => {
     navigator.clipboard.writeText(game.name)
-    }}
-    className={cn('overflow-hidden', className)}
+    show({ type: 'info', title: `${game.name} copiado` })
+  }
+  return (
+    <Card
+      onClick={handleClick}
+      className={cn('overflow-hidden cursor-pointer', className)}
     >
       <img
         src={`data:image/webp;base64,${game.imageUrl}`}
