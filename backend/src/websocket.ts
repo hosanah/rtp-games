@@ -8,7 +8,9 @@ interface RtpUpdate {
   houseId: number;
   gameName: string;
   provider: string;
-  rtp: number;
+  rtpDaily?: number;
+  rtpWeekly?: number;
+  rtpMonthly?: number;
   imageUrl?: string;
 }
 
@@ -60,8 +62,8 @@ export class RtpSocket {
 
   private async fetchAndBroadcast(house: BettingHouse) {
     try {
-      const res = await axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 2, 16, 2]), {
-        responseType: 'arraybuffer',
+      const common = {
+        responseType: 'arraybuffer' as const,
         timeout: Number(process.env.RTP_API_TIMEOUT_MS || 10000),
         family: 4,
         headers: {
@@ -70,8 +72,15 @@ export class RtpSocket {
           'User-Agent': 'Mozilla/5.0',
           accept: 'application/x-protobuf',
         },
-      });
-      const updates = this.parseProto(res.data, house.id);
+      };
+
+      const [daily, weekly, monthly] = await Promise.all([
+        axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 1, 16, 2]), common),
+        axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 2, 16, 2]), common),
+        axios.post<ArrayBuffer>(house.apiUrl, Buffer.from([8, 3, 16, 3]), common),
+      ]);
+
+      const updates = this.mergeRtps(daily.data, weekly.data, monthly.data, house.id);
       this.broadcast(updates);
     } catch (err) {
       console.error('Erro ao consultar RTP da casa', house.name, err);
@@ -85,12 +94,43 @@ export class RtpSocket {
         houseId,
         gameName: g.name,
         provider: g.provider,
-        rtp: this.adjustRtp(g.rtp),
+        rtpDaily: this.adjustRtp(g.rtp),
         imageUrl: g.image,
       }));
     } catch {
       return [];
     }
+  }
+
+  private mergeRtps(
+    dailyData: ArrayBuffer,
+    weeklyData: ArrayBuffer,
+    monthlyData: ArrayBuffer,
+    houseId: number
+  ): RtpUpdate[] {
+    const daily = this.parseProto(dailyData, houseId);
+    const weekly = this.parseProto(weeklyData, houseId);
+    const monthly = this.parseProto(monthlyData, houseId);
+
+    const map = new Map<string, RtpUpdate>();
+
+    daily.forEach(d => {
+      map.set(d.gameName, { ...d });
+    });
+
+    weekly.forEach(w => {
+      const entry = map.get(w.gameName) || { ...w };
+      entry.rtpWeekly = w.rtpDaily;
+      map.set(w.gameName, entry);
+    });
+
+    monthly.forEach(m => {
+      const entry = map.get(m.gameName) || { ...m };
+      entry.rtpMonthly = m.rtpDaily;
+      map.set(m.gameName, entry);
+    });
+
+    return Array.from(map.values());
   }
 
   private adjustRtp(value: number | string): number {
