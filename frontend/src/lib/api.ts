@@ -58,9 +58,12 @@ export const authApi = {
   
   getProfile: () =>
     api.get('/auth/profile'),
-  
+
   verifyToken: () =>
     api.get('/auth/verify'),
+
+  changePassword: (data: { currentPassword: string; newPassword: string }) =>
+    api.post('/auth/change-password', data),
 }
 
 // Funções de jogos
