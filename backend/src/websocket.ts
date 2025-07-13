@@ -1,7 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import sequelize from './models';
 import { BettingHouse } from './models/bettingHouse';
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import { decodeRtp } from './utils/rtpProtoDecoder';
 
 interface RtpUpdate {
@@ -62,10 +62,10 @@ export class RtpSocket {
 
   private async fetchAndBroadcast(house: BettingHouse) {
     try {
-      const common = {
-        responseType: 'arraybuffer' as const,
+      const common: AxiosRequestConfig = {
+        responseType: 'arraybuffer',
         timeout: Number(process.env.RTP_API_TIMEOUT_MS || 10000),
-        family: 4,
+        family: 4 as 4,
         headers: {
           'Content-Type': 'application/x-protobuf',
           Origin: house.apiUrl.split('/').slice(0, 3).join('/'),
