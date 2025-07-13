@@ -60,7 +60,7 @@ export class RtpSocket {
 
   private async fetchAndBroadcast(house: BettingHouse) {
     try {
-      const baseTimeout = Number(process.env.RTP_API_TIMEOUT_MS || 10000);
+      const baseTimeout = Number(process.env.RTP_API_TIMEOUT_MS || 20000);
       const common: AxiosRequestConfig = {
         responseType: 'arraybuffer',
         family: 4 as 4,
