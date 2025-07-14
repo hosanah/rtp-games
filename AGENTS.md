@@ -11,6 +11,7 @@
 - Evitar duplicar componentes de layout; as páginas que já são embrulhadas pelo
   `Layout` nas rotas não devem importá-lo novamente. Isso previne headers
   duplicados.
+- O hook `useRtpSocket` deve reconectar automaticamente com backoff exponencial caso o WebSocket feche inesperadamente.
 
 ### Histórico de Alterações
 
@@ -23,6 +24,7 @@
 - 2025-07-18: Corrigido carregamento de arquivos .proto no backend; script de build agora copia a pasta `src/proto` para `dist`.
 - 2025-07-19: Adicionados filtros de jogos por nome, provedor e RTP positivo/negativo na página `Games`.
 - 2025-07-20: WebSocket envia casas e jogos na inicialização e Games consome dados do socket.
+- 2025-07-21: `useRtpSocket` agora reconecta automaticamente com backoff exponencial e limpa timers ao desmontar.
 
 ## Estrutura de Banco de Dados
 
