@@ -1,62 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/Card'
 import GameCard from '@/components/games/GameCard'
-import { gamesApi, housesApi } from '@/lib/api'
 import { useRtpSocket } from '@/hooks/useRtpSocket'
-import { Game, BettingHouse } from '@/types'
+import { HouseGame } from '@/types'
 import { applySignedInt } from '@/lib/utils'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
 export default function GamesPage() {
-  const [games, setGames] = useState<Game[]>([])
-  const [houses, setHouses] = useState<BettingHouse[]>([])
-  const [houseGames, setHouseGames] = useState<Record<number, Game[]>>({})
-  const updates = useRtpSocket()
+  const [games, setGames] = useState<HouseGame[]>([])
+  const { updates, houses, houseGames } = useRtpSocket()
   const [search, setSearch] = useState('')
   const [providerFilter, setProviderFilter] = useState('')
   const [rtpFilter, setRtpFilter] = useState<'all' | 'positive' | 'negative'>('all')
   const [providers, setProviders] = useState<string[]>([])
   const [expanded, setExpanded] = useState<Record<number, boolean>>({})
 
-  useEffect(() => {
-    housesApi
-      .getAll()
-      .then((res) => setHouses(res.data))
-      .catch(() => {})
-  }, [])
 
   useEffect(() => {
-    const intervals: number[] = []
-
-    houses.forEach((house) => {
-      const fetchGames = () => {
-        gamesApi
-          .getHouseGames(house.id)
-          .then((res) => {
-            setHouseGames((prev) => ({ ...prev, [house.id]: res.data }))
-          })
-          .catch((err) => {
-            console.error(`Erro ao buscar jogos da casa ${house.name}`, err)
-          })
-      }
-
-      fetchGames()
-      const ms =
-        house.updateIntervalUnit === 'minutes'
-          ? house.updateInterval * 60000
-          : house.updateInterval * 1000
-
-      intervals.push(window.setInterval(fetchGames, ms))
-    })
-
-    return () => {
-      intervals.forEach((id) => clearInterval(id))
-    }
-  }, [houses])
-
-  useEffect(() => {
-    const allGamesMap = new Map<string, Game>()
+    const allGamesMap = new Map<string, HouseGame>()
 
     Object.values(houseGames).forEach((gamesArray) => {
       gamesArray.forEach((game) => {
@@ -76,7 +38,7 @@ export default function GamesPage() {
 
 
   // Retorna o RTP do jogo mais atualizado
-  const getRtp = (game: Game, houseId: number): number => {
+  const getRtp = (game: HouseGame, houseId: number): number => {
     const up = updates.find((u) => u.gameName === game.name && u.houseId === houseId)
     const base = applySignedInt(game.rtpDecimal ?? 0, game.signedInt)
     const rawRtp = up?.rtp ?? base

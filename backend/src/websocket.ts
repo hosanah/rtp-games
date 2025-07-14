@@ -3,6 +3,8 @@ import sequelize from './models';
 import { BettingHouse } from './models/bettingHouse';
 import axios, { type AxiosRequestConfig } from 'axios';
 import { decodeRtp } from './utils/rtpProtoDecoder';
+import { fetchHouseGames } from './utils/houseGameFetcher';
+import { DecodedHouseGame } from './utils/houseGameDecoder';
 
 interface RtpUpdate {
   houseId: number;
@@ -12,16 +14,23 @@ interface RtpUpdate {
   imageUrl?: string;
 }
 
+interface InitData {
+  houses: BettingHouse[];
+  games: Record<number, DecodedHouseGame[]>;
+}
+
 export class RtpSocket {
   private wss: WebSocketServer;
   private clients = new Set<WebSocket>();
   private houseIntervals = new Map<number, NodeJS.Timeout>();
   private reloadTimer?: NodeJS.Timeout;
+  private knownHouseIds = new Set<number>();
 
   constructor(server: any) {
     this.wss = new WebSocketServer({ server, path: '/ws' });
     this.wss.on('connection', ws => {
       this.clients.add(ws);
+      this.sendInit(ws).catch(err => console.error('Erro enviando init', err));
       ws.on('close', () => this.clients.delete(ws));
     });
   }
@@ -48,14 +57,26 @@ export class RtpSocket {
         const timer = setInterval(() => this.fetchAndBroadcast(house), intervalMs);
         this.houseIntervals.set(house.id, timer);
         this.fetchAndBroadcast(house).catch(() => {});
+        if (!this.knownHouseIds.has(house.id)) {
+          try {
+            const games = await fetchHouseGames(house);
+            this.broadcastMessage({ type: 'houseAdded', data: { house, games } });
+          } catch {
+            this.broadcastMessage({ type: 'houseAdded', data: { house, games: [] } });
+          }
+        }
       }
     }
     for (const [id, timer] of this.houseIntervals) {
       if (!activeIds.has(id)) {
         clearInterval(timer);
         this.houseIntervals.delete(id);
+        if (this.knownHouseIds.has(id)) {
+          this.broadcastMessage({ type: 'houseRemoved', data: { houseId: id } });
+        }
       }
     }
+    this.knownHouseIds = activeIds;
   }
 
   private async fetchAndBroadcast(house: BettingHouse) {
@@ -79,7 +100,7 @@ export class RtpSocket {
       );
 
       const updates = this.parseProto(res.data, house.id);
-      this.broadcast(updates);
+      this.broadcastRtp(updates);
     } catch (err) {
       console.error('Erro ao consultar RTP da casa', house.name, err);
     }
@@ -111,14 +132,34 @@ export class RtpSocket {
     return Number(val);
   }
 
-  private broadcast(updates: RtpUpdate[]) {
+  private broadcastRtp(updates: RtpUpdate[]) {
     if (!updates.length) return;
-    const payload = JSON.stringify({ type: 'rtp', data: updates });
+    this.broadcastMessage({ type: 'rtp', data: updates });
+  }
+
+  private broadcastMessage(message: any) {
+    const payload = JSON.stringify(message);
     this.clients.forEach(client => {
       if (client.readyState === client.OPEN) {
         client.send(payload);
       }
     });
+  }
+
+  private async sendInit(ws: WebSocket) {
+    const houses = await BettingHouse.findAll();
+    const games: Record<number, DecodedHouseGame[]> = {};
+    for (const house of houses) {
+      try {
+        games[house.id] = await fetchHouseGames(house);
+      } catch {
+        games[house.id] = [];
+      }
+    }
+    const payload: InitData = { houses, games };
+    if (ws.readyState === ws.OPEN) {
+      ws.send(JSON.stringify({ type: 'init', data: payload }));
+    }
   }
 }
 
