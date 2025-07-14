@@ -1,6 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { BettingHouse } from './models/bettingHouse';
 import axios, { type AxiosRequestConfig } from 'axios';
+import { retryRequest } from './utils/retryRequest';
 import { decodeRtp } from './utils/rtpProtoDecoder';
 import { fetchHouseGames } from './utils/houseGameFetcher';
 import { DecodedHouseGame } from './utils/houseGameDecoder';
@@ -24,6 +25,8 @@ export class RtpSocket {
   private houseIntervals = new Map<number, NodeJS.Timeout>();
   private reloadTimer?: NodeJS.Timeout;
   private knownHouseIds = new Set<number>();
+  private failureCounts = new Map<number, number>();
+  private pauseUntil = new Map<number, number>();
 
   constructor(server: any) {
     this.wss = new WebSocketServer({ server, path: '/ws' });
@@ -79,11 +82,18 @@ export class RtpSocket {
   }
 
   private async fetchAndBroadcast(house: BettingHouse) {
+    const paused = this.pauseUntil.get(house.id);
+    if (paused && paused > Date.now()) return;
+    if (paused && paused <= Date.now()) {
+      this.pauseUntil.delete(house.id);
+      this.failureCounts.set(house.id, 0);
+    }
+
     try {
       const baseTimeout = Number(process.env.RTP_API_TIMEOUT_MS || 20000);
-        const common: AxiosRequestConfig = {
-          responseType: 'arraybuffer',
-          family: 4 as const,
+      const common: AxiosRequestConfig = {
+        responseType: 'arraybuffer',
+        family: 4 as const,
         headers: {
           'Content-Type': 'application/x-protobuf',
           Origin: house.apiUrl.split('/').slice(0, 3).join('/'),
@@ -92,15 +102,28 @@ export class RtpSocket {
         },
       };
 
-      const res = await axios.post<ArrayBuffer>(
-        house.apiUrl,
-        Buffer.from([8, 2, 16, 2]),
-        { ...common, timeout: baseTimeout }
+      const res = await retryRequest(() =>
+        axios.post<ArrayBuffer>(
+          house.apiUrl,
+          Buffer.from([8, 2, 16, 2]),
+          { ...common, timeout: baseTimeout },
+        ),
       );
 
       const updates = this.parseProto(res.data, house.id);
+      this.failureCounts.set(house.id, 0);
       this.broadcastRtp(updates);
     } catch (err) {
+      const fails = (this.failureCounts.get(house.id) || 0) + 1;
+      this.failureCounts.set(house.id, fails);
+      const threshold = Number(process.env.HOUSE_FAIL_THRESHOLD || 3);
+      const cooldown = Number(process.env.HOUSE_COOLDOWN_MS || 300000);
+      if (fails >= threshold) {
+        if (!this.pauseUntil.has(house.id) || this.pauseUntil.get(house.id)! <= Date.now()) {
+          console.warn(`Pausing RTP requests for ${house.name} after ${fails} failures`);
+        }
+        this.pauseUntil.set(house.id, Date.now() + cooldown);
+      }
       console.error('Erro ao consultar RTP da casa', house.name, err);
     }
   }
