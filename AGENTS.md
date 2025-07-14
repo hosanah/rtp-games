@@ -13,6 +13,13 @@
   duplicados.
 - O hook `useRtpSocket` deve reconectar automaticamente com backoff exponencial caso o WebSocket feche inesperadamente.
 
+- Listagens de jogos das casas devem vir do serviço WebSocket (`useRtpSocket`),
+  não via requisições REST para `/games/house`.
+
+- A variável `VERIFY_SSL` controla a validação de certificados nas requisições HTTPS.
+  Desative (`VERIFY_SSL=false`) apenas em desenvolvimento para evitar riscos de segurança.
+
+
 ### Histórico de Alterações
 
 - 2025-07-11: Ajustado link de navegação para "/houses" no Header do frontend para usar `to` em vez de `href`.
