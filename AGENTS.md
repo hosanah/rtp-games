@@ -22,6 +22,7 @@
 - 2025-07-17: WebSocket agora recarrega periodicamente as casas de aposta para detectar novas entradas sem duplicar intervalos.
 - 2025-07-18: Corrigido carregamento de arquivos .proto no backend; script de build agora copia a pasta `src/proto` para `dist`.
 - 2025-07-19: Adicionados filtros de jogos por nome, provedor e RTP positivo/negativo na página `Games`.
+- 2025-07-20: WebSocket envia casas e jogos na inicialização e Games consome dados do socket.
 
 ## Estrutura de Banco de Dados
 

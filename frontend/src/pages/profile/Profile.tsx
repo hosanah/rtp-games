@@ -55,8 +55,8 @@ export default function ProfilePage() {
       const message =
         err instanceof Error &&
         'response' in err &&
-        typeof (err as any).response?.data?.error === 'string'
-          ? String((err as any).response.data.error)
+        typeof (err as { response?: { data?: { error?: string } } }).response?.data?.error === 'string'
+          ? String((err as { response?: { data?: { error?: string } } }).response!.data!.error)
           : 'Erro ao alterar senha'
       setError(message)
     } finally {

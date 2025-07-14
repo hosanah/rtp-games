@@ -2,13 +2,13 @@ import React from 'react'
 import { Card } from '@/components/ui/Card'
 import { cn, convertSignedInt } from '@/lib/utils'
 import { useToast } from '@/hooks/useToast'
-import { Game, BettingHouse } from '@/types'
+import { HouseGame, BettingHouse } from '@/types'
 import { ArrowUpIcon, ArrowDownIcon } from 'lucide-react'
 
 interface GameCardProps {
-  game: Game
+  game: HouseGame
   house: BettingHouse
-  getRtp: (game: Game, houseId: number) => number
+  getRtp: (game: HouseGame, houseId: number) => number
   rtpClass: (value: number) => string
   className?: string
 }
@@ -27,7 +27,7 @@ export default function GameCard({ game, house, getRtp, rtpClass, className }: G
       className={cn('overflow-hidden cursor-pointer', className)}
     >
       <img
-        src={`data:image/webp;base64,${game.imageUrl}`}
+        src={`data:image/webp;base64,${game.imageUrl || ''}`}
         alt={game.name}
         className="w-full h-24 object-contain border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
       />
