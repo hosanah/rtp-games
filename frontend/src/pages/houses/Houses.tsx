@@ -72,7 +72,7 @@ export default function HousesPage() {
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Deseja remover esta casa de aposta?')) return
+    if (!window.confirm('Deseja remover esta casa de aposta?')) return
     try {
       await housesApi.remove(id)
       await loadHouses()
