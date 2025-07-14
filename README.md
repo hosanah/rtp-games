@@ -175,6 +175,7 @@ npm run build        # Build para produção
 npm start            # Iniciar produção
 npm run migrate         # Executar migrations
 npm run seed            # Popular banco com dados
+npm run lint            # Linter do backend
 ```
 
 ### Frontend
