@@ -90,6 +90,7 @@ cd backend
 npm install
 cp .env.example .env
 # Configure as variáveis no .env
+# Defina `VERIFY_SSL=false` caso precise ignorar certificados SSL (uso apenas em desenvolvimento)
 npm run migrate
 npm run seed
 npm run dev
