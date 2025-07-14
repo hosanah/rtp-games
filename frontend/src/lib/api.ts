@@ -89,8 +89,6 @@ export const gamesApi = {
 
   getStats: () =>
     api.get('/games/stats'),
-
-  getHouseGames: (id: number) => api.get(`/games/house/${id}`),
 }
 
 // Funções de RTP

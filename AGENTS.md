@@ -11,6 +11,8 @@
 - Evitar duplicar componentes de layout; as páginas que já são embrulhadas pelo
   `Layout` nas rotas não devem importá-lo novamente. Isso previne headers
   duplicados.
+- Listagens de jogos das casas devem vir do serviço WebSocket (`useRtpSocket`),
+  não via requisições REST para `/games/house`.
 
 ### Histórico de Alterações
 
